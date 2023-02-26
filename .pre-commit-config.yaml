@@ -1,0 +1,48 @@
+# See https://pre-commit.com for more information
+
+default_language_version:
+  python: python3.10
+
+default_stages: [commit, push]
+repos:
+  # isort
+  - repo: https://github.com/pycqa/isort
+    rev: 5.12.0
+    hooks:
+      - id: isort
+        args: # arguments to configure isort
+          - --profile=black
+          - --line-length=120
+
+  # black
+  - repo: https://github.com/psf/black
+    rev: 23.1.0
+    hooks:
+      - id: black
+        args: # arguments to configure black
+          - --line-length=120
+          - --include='\.pyi?$'
+
+          # these folders wont be formatted by black
+          - --exclude="""
+            \.git |
+            \.__pycache__|
+            \.hg|
+            \.mypy_cache|
+            \.tox|
+            \.venv|
+            _build|
+            buck-out|
+            build|
+            dist"""
+
+  # flake8
+  - repo: https://github.com/pycqa/flake8
+    rev: 6.0.0
+    hooks:
+      - id: flake8
+        args: # arguments to configure flake8
+          # making isort line length compatible with black
+          - "--max-line-length=120"
+          - "--max-complexity=18"
+          - "--ignore=E203,W503"

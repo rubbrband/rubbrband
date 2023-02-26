@@ -1,0 +1,3 @@
+typer[all]
+yaspin
+docker==6.0.1

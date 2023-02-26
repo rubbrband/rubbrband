@@ -1,0 +1,2 @@
+[console_scripts]
+rubbrband = rubbrband.main:app
