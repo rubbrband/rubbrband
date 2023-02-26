@@ -6,7 +6,7 @@ Rubbrband is a Python library built to make it easy to setup and train the lates
 
 ## How to use
 
-Rubbrband depends on Docker. Here is the [installation guide for Docker](https://docs.docker.com/engine/install/)
+Rubbrband depends on Docker. Here is the [installation guide for Docker](https://docs.docker.com/engine/install/). If you need help, [contact us on discord](https://discord.gg/BW3R9yK7Fh)
 
 Install it using pip:
 
@@ -144,3 +144,4 @@ Pull requests are welcome!
 ## Supported Compute Platforms
 
 We've mainly tested this on Lambda Labs and Paperspace. Colab doesn't work quite yet, because Colab doesn't play nicely with Docker.
+
