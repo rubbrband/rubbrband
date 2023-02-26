@@ -30,7 +30,7 @@ db = {
         "shape": "anything",
     },
     "control": {
-        "description": "Control model",
+        "description": "Control diffusion models by adding extra conditions",
         "shape": "anything",
     },
 }

@@ -5,6 +5,8 @@ import docker
 import typer
 from yaspin import yaspin
 
+from rubbrband.clients.docker_client import image_pull
+
 db = {}
 client = None
 app = typer.Typer(no_args_is_help=True)
@@ -42,7 +44,7 @@ def lora(
     train(ctx, "lora")
 
 
-@app.command(rich_help_panel="Models :robot:", help="Low-rank adapation for efficient stable diffusion fine tuning")
+@app.command(rich_help_panel="Models :robot:", help="Control diffusion models by adding extra conditions")
 def control(
     ctx: typer.Context,
     dataset_dir: str = typer.Option(..., help="The full path that contains the images you want to finetune on"),
@@ -53,8 +55,8 @@ def control(
     try:
         client.images.get(image_name)
     except docker.errors.ImageNotFound:
-        typer.echo("Image not found locally, pulling image.")
-        client.images.pull(image_name)
+        typer.echo("Model not found locally, pulling model.")
+        image_pull(image_name)
 
     abs_path = os.path.abspath(ctx.params["dataset_dir"])
 
@@ -90,8 +92,8 @@ def train(ctx: typer.Context, model: str):
     try:
         client.images.get(image_name)
     except docker.errors.ImageNotFound:
-        typer.echo("Image not found locally, pulling image.")
-        client.images.pull(image_name)
+        typer.echo("Model not found locally, pulling model.")
+        image_pull(image_name)
 
     abs_path = os.path.abspath(ctx.params["dataset_dir"])
 

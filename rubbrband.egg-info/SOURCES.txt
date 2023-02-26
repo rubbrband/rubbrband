@@ -1,3 +1,4 @@
+LICENSE
 MANIFEST.in
 README.md
 pyproject.toml
@@ -11,6 +12,8 @@ rubbrband.egg-info/dependency_links.txt
 rubbrband.egg-info/entry_points.txt
 rubbrband.egg-info/requires.txt
 rubbrband.egg-info/top_level.txt
+rubbrband/clients/__init__.py
+rubbrband/clients/docker_client.py
 rubbrband/controllers/__init__.py
 rubbrband/controllers/eval.py
 rubbrband/controllers/train.py
