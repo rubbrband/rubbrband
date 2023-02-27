@@ -2,11 +2,14 @@
 
 ![rubbrband train image](https://lh3.googleusercontent.com/u/0/drive-viewer/AAOQEOSUMegyjMpYrbtErUyXXPoE_pVDwFZEVwQd14V9nZryxmlRKIJOHsS98ORQyIJGhv83xWsioXMsH4S2PahOFVmDwmbb=w2966-h2118)
 
-Rubbrband is a Python library built to make it easy to setup and train the latest open-source machine learning models. It sets up dependencies and data loaders all under the hood, and exposes training and inference commands all from a CLI.
+Rubbrband is a Python library built to make it easy to fine-tune and train the latest open-source machine learning models. It sets up dependencies and data loaders all under the hood, and exposes training and inference commands all from a CLI.
 
-## How to use
+## Detailed Documentation
+Detailed documentation with specifics on CLI commands and dataset structures can be [found here](https://rubbrband.gitbook.io/cli-docs/)
 
-Rubbrband depends on Docker. Here is the [installation guide for Docker](https://docs.docker.com/engine/install/). If you need help, [contact us on discord](https://discord.gg/BW3R9yK7Fh)
+## Getting Started
+
+Rubbrband uses Docker to create separate, working training environments on your machine. Here is the [installation guide for Docker](https://docs.docker.com/engine/install/). If you need help, [contact us on discord](https://discord.gg/BW3R9yK7Fh)
 
 Install it using pip:
 
