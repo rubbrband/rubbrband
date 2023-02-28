@@ -13,15 +13,15 @@ Rubbrband uses Docker to create separate, working training environments on your 
 
 Install it using pip:
 
-```
+``` bash
 pip install rubbrband
 ```
 
-Rubbrband uses pre-built Docker images for the latest open-source models: [Dreambooth](https://github.com/XavierXiao/Dreambooth-Stable-Diffusion.git), [LoRA](https://github.com/cloneofsimo/lora), and [ControlNet](https://github.com/lllyasviel/ControlNetv).
+Rubbrband uses pre-built Docker images for the latest open-source models: [Dreambooth](https://github.com/XavierXiao/Dreambooth-Stable-Diffusion.git), [LoRA](https://github.com/cloneofsimo/lora), and [ControlNet](https://github.com/lllyasviel/ControlNet).
 
 To train a model, do the following:
 
-```
+``` bash
 rubbrband launch lora
 # ./data should have ~10 images
 rubbrband train lora --dataset-dir ./data
@@ -35,18 +35,17 @@ rubbrband train lora --dataset-dir ./data
 
 To train LoRA, make a folder called `data` and stuff some images in it. The author recommends about 7-10 images for good results.
 
-```
+``` bash
 rubbrband launch lora
-
 rubbrand train lora --dataset-dir=./data
 ```
 
 After training, you should get a checkpoint file in the output directory in your LoRA container.
 
-```
-$ rubbrband enter LoRA //enter the docker container
+``` bash
+rubbrband enter LoRA # enter the docker container
 
-$ ls output
+ls output
 final_lora.safetensors  step_200.safetensors  step_500.safetensors  step_800.safetensors      step_inv_1000.safetensors  step_inv_400.safetensors  step_inv_700.safetensors
 step_100.safetensors    step_300.safetensors  step_600.safetensors  step_900.safetensors      step_inv_200.safetensors   step_inv_500.safetensors  step_inv_800.safetensors
 step_1000.safetensors   step_400.safetensors  step_700.safetensors  step_inv_100.safetensors  step_inv_300.safetensors   step_inv_600.safetensors  step_inv_900.safetensors
@@ -55,7 +54,7 @@ step_1000.safetensors   step_400.safetensors  step_700.safetensors  step_inv_100
 final_lora.safetensors is the file you want.
 You'll able to use the safetensors file in a Jupyter Notebook like this:
 
-```
+``` python
 from diffusers import StableDiffusionPipeline, EulerAncestralDiscreteScheduler
 from lora_diffusion import tune_lora_scale, patch_pipe
 import torch
@@ -89,7 +88,8 @@ image
 
 After doing a training run on LoRA, you can call the `eval` function.
 
-```
+``` bash
+rubbrband launch lora
 rubbrband eval lora --prompt "a man on the moon in style of <s1><s2>"
 ```
 
@@ -101,10 +101,9 @@ To train ControlNet, you'll need to compile a dataset. For more information abou
 
 Here is an example of using a sample dataset to train ControlNet. Keep in mind, ControlNet is a large model, and training takes a while. From our testing, it took about 4 hours to train a single epoch on 1xA100.
 
-```
+```bash
 rubbrband launch control
-
-// Download some sample data
+# Download sample data
 wget https://huggingface.co/lllyasviel/ControlNet/resolve/main/training/fill50k.zip
 unzip fill50k.zip
 
@@ -115,16 +114,16 @@ Checkpoints are saved to `~/ControlNet/lightning_logs/version_0/checkpoints` in 
 
 To access them:
 
-```
+``` bash
 rubbrband enter control
-$ cd ~/ControlNet/lightning_logs/version_0/checkpoints
+cd ~/ControlNet/lightning_logs/version_0/checkpoints
 ```
 
 ## ControlNet Inference Guide
 
 To do inference on ControlNet, follow these steps:
 
-```
+``` bash
 rubbrband launch control
 rubbrband eval control --annotator-type canny
 
@@ -140,9 +139,9 @@ The annotator type is the type of edge detector you want to use. Different edge 
 
 Coming soon!
 
-## Pull Requests
+## Pull Requests and Feature Requests
 
-Pull requests are welcome!
+Pull requests are welcome! If you have a feature request, please open an issue.
 
 ## Supported Compute Platforms
 

@@ -4,6 +4,7 @@ import docker
 import typer
 from yaspin import yaspin
 
+from rubbrband.clients import docker_client
 from rubbrband.controllers import eval, train
 
 __author__ = "Rubbrband"
@@ -52,7 +53,7 @@ def main():
 
 @app.command()
 def models():
-    """List all supported models"""
+    """List all supported models :robot:"""
     typer.echo("Supported Models:")
     typer.echo(f"{'NAME':12} DESCRIPTION")
     for key, val in db.items():
@@ -61,7 +62,7 @@ def models():
 
 @app.command()
 def ls():
-    """List all running models"""
+    """List all running models :robot:"""
     typer.echo("Running Models:")
     containers = client.containers.list()
 
@@ -74,7 +75,7 @@ def ls():
 @app.command()
 def launch(model: str):
     """
-    Launch a new MODEL.
+    Launch a new MODEL :robot:
 
     MODEL is the name of the model to launch.
 
@@ -88,11 +89,7 @@ def launch(model: str):
     with yaspin() as sp:
         sp.text = "Setting Up Environment. This may take up to 10 minutes."
         image_name = f"rubbrband/{model}"
-        # pull image if not already pulled
-        try:
-            client.images.get(image_name)
-        except docker.errors.ImageNotFound:
-            client.images.pull(image_name)
+        docker_client.pull_image_handler(image_name)
 
     with yaspin() as sp:
         sp.text = f"Finished. Run rubbrband train {model} to train this model on sample data."
@@ -101,7 +98,7 @@ def launch(model: str):
 @app.command()
 def enter(model: str):
     """
-    Enter into a running MODEL.
+    Enter into a running MODEL :robot:
 
     MODEL is the name of the model.
 

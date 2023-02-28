@@ -5,7 +5,7 @@ import docker
 import typer
 from yaspin import yaspin
 
-from rubbrband.clients.docker_client import image_pull
+from rubbrband.clients.docker_client import pull_image_handler
 
 db = {}
 client = None
@@ -51,12 +51,7 @@ def control(
 ):
     image_name = "rubbrband/control"
     container_name = "rb-control"
-
-    try:
-        client.images.get(image_name)
-    except docker.errors.ImageNotFound:
-        typer.echo("Model not found locally, pulling model.")
-        image_pull(image_name)
+    pull_image_handler(image_name)
 
     abs_path = os.path.abspath(ctx.params["dataset_dir"])
 
@@ -88,12 +83,7 @@ def train(ctx: typer.Context, model: str):
 
     image_name = f"rubbrband/{model}"
     container_name = f"rb-{model}"
-
-    try:
-        client.images.get(image_name)
-    except docker.errors.ImageNotFound:
-        typer.echo("Model not found locally, pulling model.")
-        image_pull(image_name)
+    pull_image_handler(image_name)
 
     abs_path = os.path.abspath(ctx.params["dataset_dir"])
 
