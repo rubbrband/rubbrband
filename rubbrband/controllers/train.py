@@ -27,8 +27,8 @@ def dreambooth(
     class_name: str = typer.Option(
         ..., help="The name that you want to give to the class of images that you'll want to generate"
     ),
-    regulation_prompt: str = typer.Option(
-        ..., help="The prompt to regulate the images. Try to describe the type of images you want to generate"
+    regularization_prompt: str = typer.Option(
+        ..., help="The prompt to regularize the images. Try to describe the type of images you want to generate"
     ),
     dataset_dir: str = typer.Option(..., help="The full path that contains the images you want to finetune on"),
     logdir: str = "experiment_logs",

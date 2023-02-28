@@ -11,6 +11,11 @@ case $key in
     shift # past argument
     shift # past value
     ;;
+    -l|--logdir)
+    logdir="$2"
+    shift # past argument
+    shift # past value
+    ;;
     *)  # unknown option
     echo "Unknown option: $key"
     exit 1
@@ -24,5 +29,9 @@ if [ -z "$input_prompt" ]; then
   exit 1
 fi
 
+if [ -z "$logdir" ]; then
+  logdir="experiment_logs"
+fi
+
 docker exec -it rb-dreambooth /bin/bash -c " \
-python scripts/stable_txt2img.py --ddim_eta 0.0 --n_samples 8  --n_iter 1  --scale 10.0  --ddim_steps 100  --ckpt experiment_logs/*/checkpoints/last.ckpt --prompt \"${input_prompt}\""
+python scripts/stable_txt2img.py --ddim_eta 0.0 --n_samples 8  --n_iter 1  --scale 10.0  --ddim_steps 100  --ckpt ${logdir}/*/checkpoints/last.ckpt --prompt \"${input_prompt}\""
