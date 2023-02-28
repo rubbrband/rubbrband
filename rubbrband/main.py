@@ -16,7 +16,7 @@ app.add_typer(eval.app, name="eval", subcommand_metavar="MODEL")
 try:
     client = docker.from_env()
 except docker.errors.DockerException:
-    typer.echo("Docker is not running. Please start Docker and try again.")
+    typer.echo("Docker is not running as root. Please start Docker or run sudo su root.")
     exit()
 
 
@@ -46,14 +46,14 @@ eval.db = db
 @app.callback()
 def main():
     """
-    The Rubbrband CLI allows you to train and evaluate models.
+    The Rubbrband CLI allows you to rapidly train and evaluate models.
     """
     pass
 
 
 @app.command()
 def models():
-    """List all supported models :robot:"""
+    """List all supported MODELS :robot:"""
     typer.echo("Supported Models:")
     typer.echo(f"{'NAME':12} DESCRIPTION")
     for key, val in db.items():
@@ -62,7 +62,7 @@ def models():
 
 @app.command()
 def ls():
-    """List all running models :robot:"""
+    """List all running MODELS :robot:"""
     typer.echo("Running Models:")
     containers = client.containers.list()
 
@@ -70,6 +70,66 @@ def ls():
     for container in containers:
         if container.name.startswith("rb-"):
             typer.echo(container.name)
+
+
+@app.command()
+def stop(model: str):
+    """
+    Stop a running MODEL :robot:
+
+    MODEL is the name of the model.
+
+    Example: rubbrband stop lora
+    """
+    with yaspin() as sp:
+        sp.text = "Stopping Docker Container"
+
+        container_name = f"rb-{model}"
+        container = docker_client.get_container(container_name)
+
+        if container:
+            container.stop()
+
+
+@app.command()
+def copy_to(model: str, src: str, dest: str):
+    """
+    Copy a file from your computer to a running MODEL :robot:
+
+    MODEL is the name of the model.
+    SRC is the path to the file on your computer.
+    DEST is the path to the file on the model.
+
+    Example: rubbrband copy-to lora /path/on/my-computer/image.png /path/on/my-model/image.png
+    """
+    with yaspin() as sp:
+        sp.text = "Copying File"
+
+        container_name = f"rb-{model}"
+        container = docker_client.get_container(container_name)
+
+        if container:
+            subprocess.run(["docker", "cp", src, f"{container.name}:{dest}"])
+
+
+@app.command()
+def copy_from(model: str, src: str, dest: str):
+    """
+    Copy a file from a running MODEL to your computer :robot:
+
+    MODEL is the name of the model.
+    SRC is the path to the file on the model.
+    DEST is the path to the file on your computer.
+
+    Example: rubbrband copy-from lora /path/on/my-model/image.png /path/on/my-computer/image.png
+    """
+    with yaspin() as sp:
+        sp.text = "Copying File"
+
+        container_name = f"rb-{model}"
+        container = docker_client.get_container(container_name)
+        if container:
+            subprocess.run(["docker", "cp", f"{container.name}:{src}", dest])
 
 
 @app.command()

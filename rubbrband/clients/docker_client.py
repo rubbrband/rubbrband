@@ -7,7 +7,7 @@ tasks = {}
 try:
     DOCKER_CLIENT = docker.from_env()
 except docker.errors.DockerException:
-    typer.echo("Docker is not running. Please start Docker and try again.")
+    typer.echo("Docker is not running as root. Please start Docker or run sudo su root.")
     exit()
 
 
@@ -48,3 +48,22 @@ def pull_image_handler(image_name):
         pull_image(image_name)
     else:
         typer.echo("Model found locally, skipping download.")
+
+
+def get_container(container_name):
+    """Returns a container object if it exists and is running."""
+    try:
+        container = DOCKER_CLIENT.containers.get(container_name)
+    except docker.errors.NotFound:
+        typer.echo("Model not found, try running rubbrband launch <model>")
+        return
+
+    if container.status != "running":
+        typer.echo("Model is not running, attemping to start model.")
+        try:
+            container.start()
+        except docker.errors.APIError:
+            typer.echo("Unable to start model. Please try again.")
+            return
+
+    return container
