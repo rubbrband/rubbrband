@@ -47,7 +47,7 @@ if [ -z "$logdir" ]; then
 fi
 
 rm -rf ${logdir}
-rm -rf outputs/txt2img-samples
+rm -rf regularized_samples
 
 # Your script code goes here
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
@@ -65,7 +65,8 @@ docker run --name rb-dreambooth --gpus all -it -d -v $SCRIPT_DIR/sd-v1-4-full-em
 
 docker exec -it rb-dreambooth /bin/bash -c " \
 python scripts/stable_txt2img.py --ddim_eta 0.0 --n_samples 10 --n_iter 1 --scale 10.0 \
---ddim_steps 50  --ckpt /home/engineering/sd-v1-4-full-ema.ckpt --prompt \"${regularization_prompt}\" ; \
+--ddim_steps 50  --ckpt /home/engineering/sd-v1-4-full-ema.ckpt --prompt \"${regularization_prompt}\" \
+--outdir regularized_samples ; \
 python main.py --base configs/stable-diffusion/v1-finetune_unfrozen.yaml  -t  \
 --actual_resume /home/engineering/sd-v1-4-full-ema.ckpt -n Experiment --gpus 1 \
- --data_root /home/engineering/dataset-dir --reg_data_root outputs/txt2img-samples  --class_word ${class_name} --no-test -l ${logdir};"
+ --data_root /home/engineering/dataset-dir --reg_data_root regularized_samples  --class_word ${class_name} --no-test -l ${logdir};"

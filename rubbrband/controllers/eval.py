@@ -84,7 +84,7 @@ def eval(ctx: typer.Context, model: str):
         # move file from docker container to local directory
         # the file is located at /home/engineering/samples/output.jpg
         # the file is moved to the current directory
-        subprocess.run(["docker", "cp", f"rb-{model}:/home/engineering/samples/output.jpg", "."])
+        subprocess.run(["docker", "cp", f"rb-{model}:/home/engineering/samples", "."])
 
     typer.echo("Inference complete. Check the current directory for the output image.")
 
