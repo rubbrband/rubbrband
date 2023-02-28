@@ -6,8 +6,8 @@ do
 key="$1"
 
 case $key in
-    -c|--class_name)
-    class_name="$2"
+    -c|--class_word)
+    class_word="$2"
     shift # past argument
     shift # past value
     ;;
@@ -34,9 +34,9 @@ esac
 done
 
 # Check if mandatory options are present
-if [ -z "$class_name" ] || [ -z "$regularization_prompt" ] || [ -z "$dataset_dir" ]; then
-  echo "Missing mandatory option(s). Usage: $0 --class_name <class_name> --regularization_prompt <regularization_prompt> --dataset_dir <path>" >&2
-  echo "class_name is the name that you want to give to the class of images that you'll want to generate" >&2
+if [ -z "$class_word" ] || [ -z "$regularization_prompt" ] || [ -z "$dataset_dir" ]; then
+  echo "Missing mandatory option(s). Usage: $0 --class_word <class_word> --regularization_prompt <regularization_prompt> --dataset_dir <path>" >&2
+  echo "class_word is the name that you want to give to the class of images that you'll want to generate" >&2
   echo "regularization_prompt is the prompt to regularize the images. Try to describe the type of images you want to generate" >&2
   echo "dataset_dir is the full path that contains the images you want to finetune on." >&2
   exit 1
@@ -69,4 +69,4 @@ python scripts/stable_txt2img.py --ddim_eta 0.0 --n_samples 10 --n_iter 1 --scal
 --outdir regularized_samples ; \
 python main.py --base configs/stable-diffusion/v1-finetune_unfrozen.yaml  -t  \
 --actual_resume /home/engineering/sd-v1-4-full-ema.ckpt -n Experiment --gpus 1 \
- --data_root /home/engineering/dataset-dir --reg_data_root regularized_samples/samples  --class_word ${class_name} --no-test -l ${logdir};"
+ --data_root /home/engineering/dataset-dir --reg_data_root regularized_samples/samples  --class_word ${class_word} --no-test -l ${logdir};"
