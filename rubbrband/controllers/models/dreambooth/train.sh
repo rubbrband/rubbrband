@@ -69,4 +69,4 @@ python scripts/stable_txt2img.py --ddim_eta 0.0 --n_samples 10 --n_iter 1 --scal
 --outdir regularized_samples ; \
 python main.py --base configs/stable-diffusion/v1-finetune_unfrozen.yaml  -t  \
 --actual_resume /home/engineering/sd-v1-4-full-ema.ckpt -n Experiment --gpus 1 \
- --data_root /home/engineering/dataset-dir --reg_data_root regularized_samples  --class_word ${class_name} --no-test -l ${logdir};"
+ --data_root /home/engineering/dataset-dir --reg_data_root regularized_samples/samples  --class_word ${class_name} --no-test -l ${logdir};"
