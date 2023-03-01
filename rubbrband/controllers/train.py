@@ -24,7 +24,7 @@ def main():
 @app.command(rich_help_panel="Models :robot:", help="Stable diffusion models, trained with dreambooth method")
 def dreambooth(
     ctx: typer.Context,
-    class_name: str = typer.Option(
+    class_word: str = typer.Option(
         ..., help="The name that you want to give to the class of images that you'll want to generate"
     ),
     regularization_prompt: str = typer.Option(
