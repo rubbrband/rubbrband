@@ -146,13 +146,11 @@ def launch(model: str):
         typer.echo("Model not found")
         return
 
-    with yaspin() as sp:
-        sp.text = "Setting Up Environment. This may take up to 10 minutes."
-        image_name = f"rubbrband/{model}"
-        docker_client.pull_image_handler(image_name)
+    typer.echo("Downloading model. This may take up to 10 minutes.")
+    image_name = f"rubbrband/{model}"
+    docker_client.pull_image_handler(image_name)
 
-    with yaspin() as sp:
-        sp.text = f"Finished. Run rubbrband train {model} to train this model on sample data."
+    typer.echo(f"Finished. Run rubbrband train {model} to train this model on sample data.")
 
 
 @app.command()
