@@ -24,6 +24,7 @@ def main():
 def dreambooth(
     ctx: typer.Context,
     input_prompt: str = typer.Option(..., help="The prompt to input into the trained model."),
+    logdir: str = "experiment_logs",
 ):
     eval(ctx, "dreambooth")
 

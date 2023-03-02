@@ -1,3 +1,4 @@
-typer[all]
+typer>=0.7.0
 yaspin
 docker>=6.0.0
+rich
