@@ -1,0 +1,9 @@
+name: rubbrband
+dependencies:
+  - python=3.10.9
+  - pip
+  - pip:
+    - -r requirements.txt
+    - pre-commit
+    - build
+    - twine
