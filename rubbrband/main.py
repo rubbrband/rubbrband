@@ -8,12 +8,15 @@ from yaspin import yaspin
 
 from rubbrband.clients import docker_client
 from rubbrband.controllers import eval, train
+import os
 
 __author__ = "Rubbrband"
 
 app = typer.Typer(no_args_is_help=True, rich_markup_mode="rich")
 app.add_typer(train.app, name="train", subcommand_metavar="MODEL")
 app.add_typer(eval.app, name="eval", subcommand_metavar="MODEL")
+image_models = ["lora", "dreambooth", "control"]
+webui_models = ["sd-webui"]
 
 try:
     client = docker.from_env()
@@ -36,6 +39,10 @@ db = {
         "description": "Control diffusion models by adding extra conditions",
         "shape": "anything",
     },
+    "sd-webui": {
+        "description": "Stable diffusion models, trained with webui method",
+        "shape": "anything",
+    }
 }
 
 # Pass singleton objects to our subcommands
@@ -161,7 +168,12 @@ def launch(model: str):
     image_name = f"rubbrband/{model}"
     docker_client.pull_image_handler(image_name)
 
-    typer.echo(f"Finished. Run rubbrband train {model} to train this model on sample data.")
+    if model in webui_models:
+        typer.echo("Finished. This model is based on a web interface.")
+        typer.echo("When you're ready, run rubbrband web {model} to launch the interface. \
+                   We'll let you know how to access it.")
+    else:
+        typer.echo(f"Finished. Run rubbrband train {model} to train this model on sample data.")
 
 
 @app.command()
