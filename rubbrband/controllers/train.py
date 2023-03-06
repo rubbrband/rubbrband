@@ -67,7 +67,8 @@ def control(
         pass
     this_dir = os.path.dirname(os.path.abspath(__file__))
 
-    subprocess.run(["chmod", "a+x", f"{this_dir}/models/control/train.sh"])
+    if os.name != "nt":
+        subprocess.run(["chmod", "a+x", f"{this_dir}/models/control/train.sh"])
     # ctx.args is a list of arguments passed to the train command
     subprocess.run(["/bin/bash", f"{this_dir}/models/control/train.sh", abs_path])
 
@@ -128,7 +129,8 @@ def train(ctx: typer.Context, model: str):
         params.append(value)
 
     with yaspin():
-        subprocess.run(["chmod", "a+x", f"{this_dir}/models/{model}/train.sh"])
+        if os.name != "nt":
+            subprocess.run(["chmod", "a+x", f"{this_dir}/models/{model}/train.sh"])
         # ctx.args is a list of arguments passed to the train command
         subprocess.run(["/bin/bash", f"{this_dir}/models/{model}/train.sh"] + params)
 

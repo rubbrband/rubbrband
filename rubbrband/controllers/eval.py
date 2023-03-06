@@ -52,7 +52,10 @@ def control(
 
     with yaspin():
         typer.echo(["/bin/bash", f"{this_dir}/models/control/infer.sh", annotator_type])
-        subprocess.run(["chmod", "a+x", f"{this_dir}/models/control/infer.sh"])
+
+        if os.name != "nt":
+            subprocess.run(["chmod", "a+x", f"{this_dir}/models/control/infer.sh"])
+
         subprocess.run(["/bin/bash", f"{this_dir}/models/control/infer.sh", annotator_type])
 
 
@@ -78,7 +81,9 @@ def eval(ctx: typer.Context, model: str):
 
     with yaspin():
         typer.echo(["/bin/bash", f"{this_dir}/models/{model}/infer.sh"] + params)
-        subprocess.run(["chmod", "a+x", f"{this_dir}/models/{model}/infer.sh"])
+
+        if os.name != "nt":
+            subprocess.run(["chmod", "a+x", f"{this_dir}/models/{model}/infer.sh"])
         # add a parameter for prompt
         subprocess.run(["/bin/bash", f"{this_dir}/models/{model}/infer.sh"] + params)
 
