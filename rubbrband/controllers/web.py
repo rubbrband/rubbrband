@@ -59,19 +59,6 @@ def web(ctx: typer.Context, model: str):
     ):  # this command not being found can raise quite a few different errors depending on the configuration
         device_requests = []
 
-    client.containers.run(
-        image_name,
-        device_requests=device_requests,
-        detach=True,
-        name=container_name,
-        tty=True,
-        stdin_open=True,
-    )
-    container = client.containers.get(f"rb-{model}")
-
-    if container.status != "running":
-        container.start()
-
     this_dir = os.path.dirname(os.path.abspath(__file__))
 
     # Convert the parameters to a list of strings
