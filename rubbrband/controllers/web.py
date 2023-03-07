@@ -17,14 +17,14 @@ def main():
     """
     Start a webui for a MODEL :robot:
 
-    Example: rubbrband web sd-webui
+    Example: rubbrband web sd_webui
     """
 
 @app.command(rich_help_panel="Models :robot:", help="Webui for stable diffusion models")
-def webui(
+def sd_webui(
     ctx: typer.Context,
 ):
-    web(ctx, "sd-webui")
+    web(ctx, "sd_webui")
 
 
 # '''name''' corresponds to the name column in db.csv
@@ -35,7 +35,7 @@ def web(ctx: typer.Context, model: str):
     if model not in db:
         typer.echo("Model not found")
         return
-
+    print(model, flush=True)
     image_name = f"rubbrband/{model}"
     container_name = f"rb-{model}"
     pull_image_handler(image_name)

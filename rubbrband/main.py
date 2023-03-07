@@ -3,11 +3,10 @@ from typing import Optional
 
 import docker
 import typer
-from setuptools.config.setupcfg import read_configuration
 from yaspin import yaspin
 
 from rubbrband.clients import docker_client
-from rubbrband.controllers import eval, train
+from rubbrband.controllers import eval, train, web
 import os
 
 __author__ = "Rubbrband"
@@ -15,8 +14,9 @@ __author__ = "Rubbrband"
 app = typer.Typer(no_args_is_help=True, rich_markup_mode="rich")
 app.add_typer(train.app, name="train", subcommand_metavar="MODEL")
 app.add_typer(eval.app, name="eval", subcommand_metavar="MODEL")
+app.add_typer(web.app, name="web", subcommand_metavar="MODEL")
 image_models = ["lora", "dreambooth", "control"]
-webui_models = ["sd-webui"]
+webui_models = ["sd_webui"]
 
 try:
     client = docker.from_env()
@@ -39,7 +39,7 @@ db = {
         "description": "Control diffusion models by adding extra conditions",
         "shape": "anything",
     },
-    "sd-webui": {
+    "sd_webui": {
         "description": "Stable diffusion models, trained with webui method",
         "shape": "anything",
     }
@@ -48,9 +48,10 @@ db = {
 # Pass singleton objects to our subcommands
 train.client = client
 eval.client = client
+web.client = client
 train.db = db
 eval.db = db
-
+web.db = db
 
 def version_callback(value: bool):
     if value:
