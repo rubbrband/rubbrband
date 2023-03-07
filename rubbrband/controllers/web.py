@@ -48,7 +48,6 @@ def web(ctx: typer.Context, model: str):
             container.stop()
             container.remove()
         container = client.containers.get(container_name)
-        print(container, flush=True)
 
     except docker.errors.NotFound:
         pass
@@ -82,7 +81,6 @@ def web(ctx: typer.Context, model: str):
         params.append(value)
 
     with yaspin():
-        print("HEREEEEE\\n\n\n\n\n\n")
         subprocess.run(["chmod", "a+x", f"{this_dir}/models/{model}/web.sh"])
         # ctx.args is a list of arguments passed to the train command
         subprocess.run(["/bin/bash", f"{this_dir}/models/{model}/web.sh"] + params)
