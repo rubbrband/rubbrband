@@ -35,7 +35,6 @@ def web(ctx: typer.Context, model: str):
     if model not in db:
         typer.echo("Model not found")
         return
-    print(model, flush=True)
     image_name = f"rubbrband/{model}"
     container_name = f"rb-{model}"
     pull_image_handler(image_name)
@@ -44,9 +43,12 @@ def web(ctx: typer.Context, model: str):
         container = client.containers.get(container_name)
 
         # stop and remove container if it is already running
+        
         if container.status == "running":
             container.stop()
             container.remove()
+        container = client.containers.get(container_name)
+        print(container, flush=True)
 
     except docker.errors.NotFound:
         pass
@@ -80,6 +82,7 @@ def web(ctx: typer.Context, model: str):
         params.append(value)
 
     with yaspin():
+        print("HEREEEEE\\n\n\n\n\n\n")
         subprocess.run(["chmod", "a+x", f"{this_dir}/models/{model}/web.sh"])
         # ctx.args is a list of arguments passed to the train command
         subprocess.run(["/bin/bash", f"{this_dir}/models/{model}/web.sh"] + params)

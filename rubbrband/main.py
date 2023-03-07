@@ -16,7 +16,7 @@ app.add_typer(train.app, name="train", subcommand_metavar="MODEL")
 app.add_typer(eval.app, name="eval", subcommand_metavar="MODEL")
 app.add_typer(web.app, name="web", subcommand_metavar="MODEL")
 image_models = ["lora", "dreambooth", "control"]
-webui_models = ["sd_webui"]
+webui_models = ["sd-webui"]
 
 try:
     client = docker.from_env()
@@ -39,7 +39,7 @@ db = {
         "description": "Control diffusion models by adding extra conditions",
         "shape": "anything",
     },
-    "sd_webui": {
+    "sd-webui": {
         "description": "Stable diffusion models, trained with webui method",
         "shape": "anything",
     }
