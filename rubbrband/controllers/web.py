@@ -17,14 +17,14 @@ def main():
     """
     Start a webui for a MODEL :robot:
 
-    Example: rubbrband web sd_webui
+    Example: rubbrband web sd-webui
     """
 
 @app.command(rich_help_panel="Models :robot:", help="Webui for stable diffusion models")
 def sd_webui(
     ctx: typer.Context,
 ):
-    web(ctx, "sd_webui")
+    web(ctx, "sd-webui")
 
 
 # '''name''' corresponds to the name column in db.csv
