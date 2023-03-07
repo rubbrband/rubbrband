@@ -1,9 +1,7 @@
 import subprocess
-from typing import Optional
 
 import docker
 import typer
-from setuptools.config.setupcfg import read_configuration
 from yaspin import yaspin
 
 from rubbrband.clients import docker_client
@@ -45,17 +43,8 @@ train.db = db
 eval.db = db
 
 
-def version_callback(value: bool):
-    if value:
-        version = read_configuration("setup.cfg")["metadata"]["version"]
-        typer.echo(f"Rubbrband CLI Version: {version}")
-        raise typer.Exit()
-
-
 @app.callback()
-def main(
-    version: Optional[bool] = typer.Option(None, "--version", callback=version_callback, is_eager=True),
-):
+def main():
     """
     The Rubbrband CLI allows you to rapidly train and evaluate models.
     """
