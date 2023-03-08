@@ -1,5 +1,4 @@
 import subprocess
-from typing import Optional
 
 import docker
 import typer
@@ -7,7 +6,6 @@ from yaspin import yaspin
 
 from rubbrband.clients import docker_client
 from rubbrband.controllers import eval, train, web
-import os
 
 __author__ = "Rubbrband"
 
@@ -42,7 +40,7 @@ db = {
     "sd-webui": {
         "description": "Stable diffusion models, trained with webui method",
         "shape": "anything",
-    }
+    },
 }
 
 # Pass singleton objects to our subcommands
@@ -53,17 +51,9 @@ train.db = db
 eval.db = db
 web.db = db
 
-def version_callback(value: bool):
-    if value:
-        version = read_configuration("setup.cfg")["metadata"]["version"]
-        typer.echo(f"Rubbrband CLI Version: {version}")
-        raise typer.Exit()
-
 
 @app.callback()
-def main(
-    version: Optional[bool] = typer.Option(None, "--version", callback=version_callback, is_eager=True),
-):
+def main():
     """
     The Rubbrband CLI allows you to rapidly train and evaluate models.
     """
@@ -171,8 +161,10 @@ def launch(model: str):
 
     if model in webui_models:
         typer.echo("Finished. This model is based on a web interface.")
-        typer.echo("When you're ready, run rubbrband web {model} to launch the interface. \
-                   We'll let you know how to access it.")
+        typer.echo(
+            "When you're ready, run rubbrband web {model} to launch the interface. \
+                   We'll let you know how to access it."
+        )
     else:
         typer.echo(f"Finished. Run rubbrband train {model} to train this model on sample data.")
 

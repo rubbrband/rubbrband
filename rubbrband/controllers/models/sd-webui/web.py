@@ -46,7 +46,8 @@ def main():
             "-it",
             "-d",
             "-v",
-            os.path.join(args.script_dir, "sd-v1-4-full-ema.ckpt") + ":/home/engineering/stable-diffusion-webui/models/Stable-diffusion/sd-v1-4-full-ema.ckpt",
+            os.path.join(args.script_dir, "sd-v1-4-full-ema.ckpt")
+            + ":/home/engineering/stable-diffusion-webui/models/Stable-diffusion/sd-v1-4-full-ema.ckpt",
             "-d",
             "rubbrband/sd-webui:latest",
         ]
@@ -60,7 +61,7 @@ def main():
             "rb-sd-webui",
             "/bin/bash",
             "-c",
-            "bash webui.sh --xformers --share --enable-insecure-extension-access"
+            "bash webui.sh --xformers --share --enable-insecure-extension-access",
         ]
     )
 

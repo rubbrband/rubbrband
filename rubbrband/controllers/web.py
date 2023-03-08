@@ -20,6 +20,7 @@ def main():
     Example: rubbrband web sd-webui
     """
 
+
 @app.command(rich_help_panel="Models :robot:", help="Webui for stable diffusion models")
 def sd_webui(
     ctx: typer.Context,
@@ -43,7 +44,7 @@ def web(ctx: typer.Context, model: str):
         container = client.containers.get(container_name)
 
         # stop and remove container if it is already running
-        
+
         if container.status == "running":
             container.stop()
             container.remove()
@@ -51,13 +52,6 @@ def web(ctx: typer.Context, model: str):
 
     except docker.errors.NotFound:
         pass
-    try:
-        subprocess.check_output("nvidia-smi")
-        device_requests = [docker.types.DeviceRequest(count=-1, capabilities=[["gpu"]])]
-    except (
-        Exception
-    ):  # this command not being found can raise quite a few different errors depending on the configuration
-        device_requests = []
 
     this_dir = os.path.dirname(os.path.abspath(__file__))
 
