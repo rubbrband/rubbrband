@@ -31,7 +31,7 @@ def main():
             print(f"Failed to download checkpoint file. Status code: {response.status_code}")
             sys.exit(1)
 
-    if "rb-sd-webui" in subprocess.check_output(["docker", "ps", "-a"]):
+    if "rb-sd-webui" in subprocess.check_output(["docker", "ps", “-a”]).decode(“utf-8”):
         subprocess.call(["docker", "stop", "rb-sd-webui"])
         subprocess.call(["docker", "rm", "rb-sd-webui"])
 
