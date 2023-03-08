@@ -1,9 +1,11 @@
-import os
 import subprocess
 
 import docker
 import typer
-from yaspin import yaspin
+
+from rubbrband.controllers.models.control.eval import main as eval_control
+from rubbrband.controllers.models.dreambooth.eval import main as eval_dreambooth
+from rubbrband.controllers.models.lora.eval import main as eval_lora
 
 db = {}
 client = None
@@ -37,26 +39,39 @@ def lora(
     eval(ctx, "lora")
 
 
-@app.command(rich_help_panel="Models :robot:", help="Low-rank adapation for efficient stable diffusion fine tuning")
-def control(
-    ctx: typer.Context,
-    annotator_type: str = typer.Option(..., help="The edge detector to use."),
-):
+def control_callback(annotator_type: str):
+    """Callback for the control command."""
     valid_annotators = ["canny", "depth", "hed", "mlsd", "normal", "openpose", "scribble", "seg"]
 
     if annotator_type not in valid_annotators:
         typer.echo(f"Invalid annotator type. Valid types are: {', '.join(valid_annotators)}")
         return
 
-    this_dir = os.path.dirname(os.path.abspath(__file__))
 
-    with yaspin():
-        typer.echo(["/bin/bash", f"{this_dir}/models/control/infer.sh", annotator_type])
+@app.command(rich_help_panel="Models :robot:", help="Low-rank adapation for efficient stable diffusion fine tuning")
+def control(
+    ctx: typer.Context,
+    annotator_type: str = typer.Option(..., callback=control_callback, help="The edge detector to use."),
+):
+    eval(ctx, "control")
 
-        if os.name != "nt":
-            subprocess.run(["chmod", "a+x", f"{this_dir}/models/control/infer.sh"])
 
-        subprocess.run(["/bin/bash", f"{this_dir}/models/control/infer.sh", annotator_type])
+def handle_model_eval(params: dict, model: str):
+    """Handle which model to run."""
+
+    if model == "control":
+        eval_control(**params)
+    elif model == "dreambooth":
+        eval_dreambooth(**params)
+    elif model == "lora":
+        eval_lora(**params)
+    else:
+        typer.echo(f"Model {model} is not supported.")
+
+    # move file from docker container to local directory
+    # the file is located at /home/engineering/samples/output.jpg
+    # the file is moved to the current directory
+    subprocess.run(["docker", "cp", f"rb-{model}:/home/engineering/samples", "."])
 
 
 def eval(ctx: typer.Context, model: str):
@@ -71,27 +86,7 @@ def eval(ctx: typer.Context, model: str):
     if container.status != "running":
         container.start()
 
-    this_dir = os.path.dirname(os.path.abspath(__file__))
-
-    # Convert the parameters to a list of strings
-    params = []
-    for key, value in ctx.params.items():
-        params.append(f"--{key}")
-        params.append(value)
-
-    with yaspin():
-        typer.echo(["/bin/bash", f"{this_dir}/models/{model}/infer.sh"] + params)
-
-        if os.name != "nt":
-            subprocess.run(["chmod", "a+x", f"{this_dir}/models/{model}/infer.sh"])
-        # add a parameter for prompt
-        subprocess.run(["/bin/bash", f"{this_dir}/models/{model}/infer.sh"] + params)
-
-        # move file from docker container to local directory
-        # the file is located at /home/engineering/samples/output.jpg
-        # the file is moved to the current directory
-        subprocess.run(["docker", "cp", f"rb-{model}:/home/engineering/samples", "."])
-
+    handle_model_eval(ctx.params, model)
     typer.echo("Inference complete. Check the current directory for the output image.")
 
 

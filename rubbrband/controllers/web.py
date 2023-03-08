@@ -1,11 +1,8 @@
-import os
-import subprocess
-
 import docker
 import typer
-from yaspin import yaspin
 
 from rubbrband.clients.docker_client import pull_image_handler
+from rubbrband.controllers.models.sd_webui.web import main as web_sd_webui
 
 db = {}
 client = None
@@ -26,6 +23,14 @@ def sd_webui(
     ctx: typer.Context,
 ):
     web(ctx, "sd-webui")
+
+
+def handle_model_web(params: dict, model: str):
+    """Handle which model to run."""
+    if model == "sd-webui":
+        web_sd_webui()
+    else:
+        typer.echo(f"Model {model} not found")
 
 
 # '''name''' corresponds to the name column in db.csv
@@ -53,18 +58,7 @@ def web(ctx: typer.Context, model: str):
     except docker.errors.NotFound:
         pass
 
-    this_dir = os.path.dirname(os.path.abspath(__file__))
-
-    # Convert the parameters to a list of strings
-    params = []
-    for key, value in ctx.params.items():
-        params.append(f"--{key}")
-        params.append(value)
-
-    with yaspin():
-        subprocess.run(["chmod", "a+x", f"{this_dir}/models/{model}/web.sh"])
-        # ctx.args is a list of arguments passed to the train command
-        subprocess.run(["/bin/bash", f"{this_dir}/models/{model}/web.sh"] + params)
+    handle_model_web(ctx.params, model)
 
 
 if __name__ == "__main__":

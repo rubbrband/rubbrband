@@ -3,9 +3,11 @@ import subprocess
 
 import docker
 import typer
-from yaspin import yaspin
 
 from rubbrband.clients.docker_client import pull_image_handler
+from rubbrband.controllers.models.control.train import main as train_control
+from rubbrband.controllers.models.dreambooth.train import main as train_dreambooth
+from rubbrband.controllers.models.lora.train import main as train_lora
 
 db = {}
 client = None
@@ -49,33 +51,22 @@ def control(
     ctx: typer.Context,
     dataset_dir: str = typer.Option(..., help="The full path that contains the images you want to finetune on"),
 ):
-    image_name = "rubbrband/control"
-    container_name = "rb-control"
-    pull_image_handler(image_name)
-
-    abs_path = os.path.abspath(ctx.params["dataset_dir"])
-
-    try:
-        container = client.containers.get(container_name)
-
-        # stop and remove container if it is already running
-        if container.status == "running":
-            container.stop()
-            container.remove()
-
-    except docker.errors.NotFound:
-        pass
-    this_dir = os.path.dirname(os.path.abspath(__file__))
-
-    if os.name != "nt":
-        subprocess.run(["chmod", "a+x", f"{this_dir}/models/control/train.sh"])
-    # ctx.args is a list of arguments passed to the train command
-    subprocess.run(["/bin/bash", f"{this_dir}/models/control/train.sh", abs_path])
+    train(ctx, "control")
 
 
-# '''name''' corresponds to the name column in db.csv
-# the option '''-d''' or '''--dataset_dir''' is the path to the dataset directory
-# this directory gets mounted to the container at /home/engineering/data
+def handle_model_train(params: dict, model: str):
+    """Handle the training of a model."""
+
+    if model == "control":
+        train_control(**params)
+    elif model == "dreambooth":
+        train_dreambooth(**params)
+    elif model == "lora":
+        train_lora()
+    else:
+        typer.echo(f"Model {model} is not supported.")
+
+
 def train(ctx: typer.Context, model: str):
     """Entrypoint for training a model."""
     if model not in db:
@@ -120,19 +111,7 @@ def train(ctx: typer.Context, model: str):
     if container.status != "running":
         container.start()
 
-    this_dir = os.path.dirname(os.path.abspath(__file__))
-
-    # Convert the parameters to a list of strings
-    params = []
-    for key, value in ctx.params.items():
-        params.append(f"--{key}")
-        params.append(value)
-
-    with yaspin():
-        if os.name != "nt":
-            subprocess.run(["chmod", "a+x", f"{this_dir}/models/{model}/train.sh"])
-        # ctx.args is a list of arguments passed to the train command
-        subprocess.run(["/bin/bash", f"{this_dir}/models/{model}/train.sh"] + params)
+    handle_model_train(ctx.params, model)
 
 
 if __name__ == "__main__":
