@@ -40,10 +40,15 @@ def pull_image_handler(image_name):
     matched_images = DOCKER_CLIENT.images.list(image_name)
     registry_digest_sha = DOCKER_CLIENT.images.get_registry_data(image_name).attrs["Descriptor"]["digest"]
 
+    try:
+        local_digest_sha = matched_images[0].attrs["RepoDigests"][0].split("@")[1]
+    except IndexError:
+        local_digest_sha = None
+
     if len(matched_images) == 0:
         typer.echo("Model not found locally, downloading model.")
         pull_image(image_name)
-    elif matched_images[0].attrs["RepoDigests"][0].split("@")[1] != registry_digest_sha:
+    elif local_digest_sha != registry_digest_sha:
         typer.echo("Model found locally, but is outdated. Downloading new model.")
         pull_image(image_name)
     else:

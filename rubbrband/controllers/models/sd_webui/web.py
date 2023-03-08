@@ -1,4 +1,3 @@
-import argparse
 import os
 import subprocess
 import sys
@@ -6,21 +5,11 @@ import sys
 import requests
 
 
-def parse_args():
-    """Parse sd-webui web arguments."""
-
-    parser = argparse.ArgumentParser(description="Create webui for stable diffusion models")
-    args = parser.parse_args()
-    args.script_dir = os.path.dirname(os.path.realpath(__file__))
-
-    return args
-
-
 def main():
     """Run the webui script."""
-    args = parse_args()
 
-    ckpt_path = os.path.join(args.script_dir, "sd-v1-4-full-ema.ckpt")
+    script_dir = os.path.dirname(os.path.realpath(__file__))
+    ckpt_path = os.path.join(script_dir, "sd-v1-4-full-ema.ckpt")
     if not os.path.isfile(ckpt_path):
         url = "https://huggingface.co/CompVis/stable-diffusion-v-1-4-original/resolve/main/sd-v1-4-full-ema.ckpt"
         response = requests.get(url)
@@ -46,7 +35,7 @@ def main():
             "-it",
             "-d",
             "-v",
-            os.path.join(args.script_dir, "sd-v1-4-full-ema.ckpt")
+            os.path.join(script_dir, "sd-v1-4-full-ema.ckpt")
             + ":/home/engineering/stable-diffusion-webui/models/Stable-diffusion/sd-v1-4-full-ema.ckpt",
             "-d",
             "rubbrband/sd-webui:latest",
