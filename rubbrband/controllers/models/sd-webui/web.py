@@ -32,8 +32,8 @@ def main():
             sys.exit(1)
 
     if "rb-sd-webui" in subprocess.check_output(["docker", "ps", "-a"]):
-        subprocess.call(["docker", "stop", "rb-dreambooth"])
-        subprocess.call(["docker", "rm", "rb-dreambooth"])
+        subprocess.call(["docker", "stop", "rb-sd-webui"])
+        subprocess.call(["docker", "rm", "rb-sd-webui"])
 
     subprocess.call(
         [
@@ -57,7 +57,7 @@ def main():
             "docker",
             "exec",
             "-it",
-            "rb-dreambooth",
+            "rb-sd-webui",
             "/bin/bash",
             "-c",
             "bash webui.sh --xformers --share --enable-insecure-extension-access"
