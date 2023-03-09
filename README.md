@@ -10,6 +10,8 @@ Rubbrband uses Docker to create separate, working training environments on your 
 
 Here is a snippet code that downloads a dummy dataset, and starts finetuning Dreambooth for you. Be sure to have a graphics card with at least 24GB of VRAM. We recommend you use a A100 GPU for this task on Lambda Labs or Runpod.
 
+If you're on Linux, make sure to run `sudo su` before all of these commands. This is because Docker-py needs root access.
+
 ``` bash
 # install rubbrband
 pip install rubbrband
@@ -19,9 +21,6 @@ git clone https://github.com/rubbrband/sample_dataset.git
 git clone https://github.com/JoePenna/Stable-Diffusion-Regularization-Images.git
 mkdir regDir
 mv ./Stable-Diffusion-Regularization-Images/man_unsplash ./regDir/man
-
-# launch dreambooth
-rubbrband launch dreambooth
 
 # start training
 rubbrband train dreambooth --class-word man --dataset-dir ./sample_dataset --reg-dir ./regDir --model-name testmodel
@@ -42,7 +41,12 @@ Your final checkpoint will be in the logs folder as `last.ckpt`.
 To launch Stable Diffusion web ui, run
 
 ``` bash
-rubbrband launch sd-webui
+rubbrband web sd-webui
+```
+
+Copy your checkpoint to Automatic1111:
+
+``` bash
 rubbrband copy-to sd-webui /path/to/last.ckpt /home/engineering/stable-diffusion-webui/models/Stable-diffusion/
 ```
 
