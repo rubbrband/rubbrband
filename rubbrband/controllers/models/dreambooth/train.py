@@ -3,6 +3,7 @@ import os
 import subprocess
 import sys
 
+import GPUtil
 import requests
 
 
@@ -42,10 +43,35 @@ def parse_args():
     return parser.parse_args()
 
 
+def check_gpu():
+    gpus = GPUtil.getGPUs()
+
+    # Check if there is at least one GPU available
+    if len(gpus) > 0:
+        # Get the first GPU and check its VRAM
+        gpu = gpus[0]
+        if gpu.memoryTotal > 25:
+            return True
+        else:
+            print("Graphics card found, but it has less than 25GB VRAM.")
+            return False
+    else:
+        print("No graphics card found.")
+        return False
+
+
 def main(**kwargs):
     """Run the dreambooth train script."""
+
     script_dir = os.path.dirname(os.path.realpath(__file__))
     ckpt_path = os.path.join(script_dir, "sd-v1-4-full-ema.ckpt")
+
+    gpu_ready = check_gpu()
+
+    if not gpu_ready:
+        print("You need a GPU with at least 25GB VRAM to finetune the model.")
+        sys.exit(1)
+
     if not os.path.isfile(ckpt_path):
         url = "https://huggingface.co/CompVis/stable-diffusion-v-1-4-original/resolve/main/sd-v1-4-full-ema.ckpt"
         response = requests.get(url)
@@ -87,6 +113,9 @@ def main(**kwargs):
     # count the number of images in dataset_dir, including files in subdirectories
     num_images = sum(len(files) for _, _, files in os.walk(kwargs["dataset_dir"]))
     training_steps = num_images * 70
+
+    if num_images < 50:
+        print("You should have least 100 images to finetune the model. Otherwise, you may not get good results")
 
     subprocess.call(
         [
