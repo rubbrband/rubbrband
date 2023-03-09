@@ -29,11 +29,9 @@ def dreambooth(
     class_word: str = typer.Option(
         ..., help="The name that you want to give to the class of images that you'll want to generate"
     ),
-    regularization_prompt: str = typer.Option(
-        ..., help="The prompt to regularize the images. Try to describe the type of images you want to generate"
-    ),
+    reg_dir: str = typer.Option(..., help="The full path that contains the regularization images."),
     dataset_dir: str = typer.Option(..., help="The full path that contains the images you want to finetune on"),
-    logdir: str = "experiment_logs",
+    model_name: str = "The name you want to give your model checkpoint file",
 ):
     train(ctx, "dreambooth")
 
