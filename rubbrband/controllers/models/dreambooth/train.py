@@ -64,7 +64,7 @@ def main(**kwargs):
     """Run the dreambooth train script."""
 
     script_dir = os.path.dirname(os.path.realpath(__file__))
-    ckpt_path = os.path.join(script_dir, "sd-v1-4-full-ema.ckpt")
+    ckpt_path = os.path.join(script_dir, "v1-5-pruned.ckpt")
 
     gpu_ready = check_gpu()
 
