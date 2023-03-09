@@ -118,20 +118,15 @@ def main(**kwargs):
     if num_images < 50:
         print("You should have least 100 images to finetune the model. Otherwise, you may not get good results")
 
-    subprocess.call(
-        [
-            "docker",
-            "exec",
-            "-it",
-            "rb-dreambooth",
-            "/bin/bash",
-            "-c",
-            "python main.py " "--base configs/stable-diffusion/v1-finetune_unfrozen.yaml",
-            f"-t --actual_resume /home/engineering/v1-5-pruned.ckpt -n {model_name} --gpus 0,",
-            "--data_root /home/engineering/dataset-dir --reg_data_root /home/engineering/reg-dir",
-            f" --token rbsubject --class_word {class_word} --max_training_steps {training_steps} --no-test",
-        ]
+    conda_cmd = (
+        "conda run --no-capture-output -n ldm ",
+        "python main.py " "--base configs/stable-diffusion/v1-finetune_unfrozen.yaml",
+        f"-t --actual_resume /home/engineering/v1-5-pruned.ckpt -n {model_name} --gpus 0,",
+        "--data_root /home/engineering/dataset-dir --reg_data_root /home/engineering/reg-dir",
+        f" --token rbsubject --class_word {class_word} --max_training_steps {training_steps} --no-test",
     )
+
+    subprocess.call(["docker", "exec", "-it", "rb-dreambooth", "/bin/bash", "-c", f"'{conda_cmd}'"])
 
 
 if __name__ == "__main__":
