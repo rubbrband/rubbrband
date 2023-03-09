@@ -38,12 +38,12 @@ def main(**kwargs):
     subprocess.call(f"docker run --name rb-control {gpu_arg} -it -d {volumes} -d rubbrband/control:latest")
 
     conda_cmd = (
-        "conda run --no-capture-output -n control "
-        "python tool_add_control.py ./models/v1-5-pruned.ckpt ./models/control_sd15_ini.ckpt && "
+        "conda run --no-capture-output -n control"
+        "python tool_add_control.py ./models/v1-5-pruned.ckpt ./models/control_sd15_ini.ckpt &&"
         "conda run --no-capture-output -n control python tutorial_train.py"
     )
 
-    subprocess.call(f"docker exec -it rb-control /bin/bash -c '{conda_cmd}'")
+    subprocess.call(f"docker exec -it rb-control /bin/bash -c '{' '.join(conda_cmd)}'", shell=True)
 
 
 if __name__ == "__main__":
