@@ -130,7 +130,9 @@ def main(**kwargs):
         f"--token rbsubject --class_word {class_word} --max_training_steps {training_steps} --no-test",
     )
 
-    subprocess.call(["docker", "exec", "-it", "rb-dreambooth", "/bin/bash", "-c", f"'{' '.join(conda_cmd)}'"])
+    subprocess.call(
+        " ".join(["docker", "exec", "-it", "rb-dreambooth", "/bin/bash", "-c", f"'{' '.join(conda_cmd)}'"]), shell=True
+    )
 
 
 if __name__ == "__main__":
