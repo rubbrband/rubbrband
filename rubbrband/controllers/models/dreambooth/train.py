@@ -73,7 +73,8 @@ def main(**kwargs):
         sys.exit(1)
 
     if not os.path.isfile(ckpt_path):
-        url = "https://huggingface.co/CompVis/stable-diffusion-v-1-4-original/resolve/main/sd-v1-4-full-ema.ckpt"
+        print("Downloading SD checkpoint file. This is about 7GB.")
+        url = "https://huggingface.co/runwayml/stable-diffusion-v1-5/resolve/main/v1-5-pruned.ckpt"
         response = requests.get(url)
         if response.status_code == 200:
             with open(ckpt_path, "wb") as f:
@@ -97,7 +98,7 @@ def main(**kwargs):
             "-it",
             "-d",
             "-v",
-            os.path.join(script_dir, "sd-v1-4-full-ema.ckpt") + ":/home/engineering/sd-v1-4-full-ema.ckpt",
+            os.path.join(script_dir, "v1-5-pruned.ckpt") + ":/home/engineering/v1-5-pruned.ckpt",
             "-v",
             kwargs["dataset_dir"] + ":/home/engineering/dataset-dir",
             "-v",
@@ -126,7 +127,7 @@ def main(**kwargs):
             "/bin/bash",
             "-c",
             "python main.py " "--base configs/stable-diffusion/v1-finetune_unfrozen.yaml",
-            f"-t --actual_resume /home/engineering/sd-v1-4-full-ema.ckpt -n {model_name} --gpus 0,",
+            f"-t --actual_resume /home/engineering/v1-5-pruned.ckpt -n {model_name} --gpus 0,",
             "--data_root /home/engineering/dataset-dir --reg_data_root /home/engineering/reg-dir",
             f" --token rbsubject --class_word {class_word} --max_training_steps {training_steps} --no-test",
         ]
