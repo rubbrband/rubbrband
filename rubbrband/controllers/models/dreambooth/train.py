@@ -87,6 +87,9 @@ def main(**kwargs):
         subprocess.call(["docker", "stop", "rb-dreambooth"])
         subprocess.call(["docker", "rm", "rb-dreambooth"])
 
+    datasetdir = os.path.abspath(kwargs["dataset_dir"])
+    regdir = os.path.abspath(kwargs["reg_dir"])
+
     subprocess.call(
         [
             "docker",
@@ -100,9 +103,9 @@ def main(**kwargs):
             "-v",
             os.path.join(script_dir, "v1-5-pruned.ckpt") + ":/home/engineering/v1-5-pruned.ckpt",
             "-v",
-            kwargs["dataset_dir"] + ":/home/engineering/dataset-dir",
+            datasetdir + ":/home/engineering/dataset-dir",
             "-v",
-            kwargs["reg_dir"] + ":/home/engineering/reg-dir",
+            regdir + ":/home/engineering/reg-dir",
             "-d",
             "rubbrband/dreambooth:latest",
         ]
@@ -121,7 +124,7 @@ def main(**kwargs):
     conda_cmd = (
         "conda run --no-capture-output -n ldm",
         "python /home/engineering/JoePenna-Dreambooth/main.py "
-        "--base configs/stable-diffusion/v1-finetune_unfrozen.yaml",
+        "--base /home/engineering/JoePenna-Dreambooth/configs/stable-diffusion/v1-finetune_unfrozen.yaml",
         f"-t --actual_resume /home/engineering/v1-5-pruned.ckpt -n {model_name} --gpus 0,",
         "--data_root /home/engineering/dataset-dir --reg_data_root /home/engineering/reg-dir",
         f"--token rbsubject --class_word {class_word} --max_training_steps {training_steps} --no-test",
