@@ -48,6 +48,32 @@ rubbrband copy-to sd-webui /path/to/last.ckpt /home/engineering/stable-diffusion
 
 Then, visit the link to your webui at `http://localhost:7860` and use your new checkpoint file.
 
+## FAQ
+**How many samples do I need for Dreambooth finetuning on a person?**
+
+We recommend you use 50 images of a person, if you want great results. If you want to generate a variety of different images of a person, you may want to try 20-30 very different images of a person, in different lighting conditions and clothing, from different angles.
+
+If you aim to generate a sequence of images with the person looking a specific way(for a animation for instance), you'll want your images of the person to be in the same lighting condition and clothing, but in different poses and from different angles. Try:
+
+- 20 headshot images from different angles
+- 20 medium shots from different angles
+- 10 far away shots
+
+**What should the folder structure be for finetuning on a person?**
+
+We recommend you download the sample dataset above.  Essentially, the person you want to finetune on will be given automatically be given a token called `rbsubject`. Your dataset folder structure should be as follows
+
+``` 
+-> dataset-dir
+  -> rbsubject
+    -> class_name
+      -> your images
+```
+
+**Can I finetune on multiple subjects?**
+
+Yes! Make sure to put your alternate subjects as tokens in your dataset-dir. This should follow the same structure as the default `rbsubject` subject. You won't need to specify the other subjects in your CLI command for training. Make sure to get regularization images for this subjects class_name as well.
+
 ## How it works
 
 `rubbrband launch MODEL` pulls a docker image for `MODEL`, with all of the correct dependencies and CUDA drivers installed. Rubbrband uses pre-built Docker images for the latest open-source models: [Dreambooth](https://github.com/XavierXiao/Dreambooth-Stable-Diffusion.git), [LoRA](https://github.com/cloneofsimo/lora), and [ControlNet](https://github.com/lllyasviel/ControlNet).
