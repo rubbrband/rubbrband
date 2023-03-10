@@ -18,7 +18,7 @@ pip install rubbrband
 
 # download dummy dataset and set folder structure
 git clone https://github.com/rubbrband/sample_dataset.git
-git clone https://github.com/JoePenna/Stable-Diffusion-Regularization-Images.git
+git clone https://github.com/JoePenna/Stable-Diffusion-Regularization-Images.git --depth 1
 mkdir regDir
 mv ./Stable-Diffusion-Regularization-Images/man_unsplash ./regDir/man
 
