@@ -18,6 +18,8 @@ rubbrband/controllers/__init__.py
 rubbrband/controllers/eval.py
 rubbrband/controllers/train.py
 rubbrband/controllers/web.py
+rubbrband/controllers/models/base/Dockerfile
+rubbrband/controllers/models/base/library-scripts/common-debian.sh
 rubbrband/controllers/models/control/Dockerfile
 rubbrband/controllers/models/control/eval.py
 rubbrband/controllers/models/control/train.py
@@ -27,7 +29,6 @@ rubbrband/controllers/models/control/library-scripts/train.py
 rubbrband/controllers/models/dreambooth/Dockerfile
 rubbrband/controllers/models/dreambooth/eval.py
 rubbrband/controllers/models/dreambooth/train.py
-rubbrband/controllers/models/dreambooth/library-scripts/common-debian.sh
 rubbrband/controllers/models/lora/Dockerfile
 rubbrband/controllers/models/lora/eval.py
 rubbrband/controllers/models/lora/train.py
