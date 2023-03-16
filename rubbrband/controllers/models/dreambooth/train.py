@@ -163,7 +163,7 @@ def main(**kwargs):
             f"-t --actual_resume /home/engineering/v1-5-pruned.ckpt -n {model_name} --gpus 0,",
             "--data_root /home/engineering/dataset-dir --reg_data_root /home/engineering/reg-dir",
             f"--token rbsubject --class_word {class_word} --max_training_steps {training_steps} --no-test",
-            "--log_dir /home/engineering/log-dir",
+            "--logdir /home/engineering/log-dir",
         )
     else:
         conda_cmd = (
