@@ -146,6 +146,8 @@ def main(**kwargs):
 
     class_word = kwargs["class_word"]
     model_name = kwargs["model_name"]
+    if not model_name:
+        model_name = "rubbrband-db-model"
 
     # count the number of images in dataset_dir, including files in subdirectories
     num_images = sum(len(files) for _, _, files in os.walk(kwargs["dataset_dir"]))
