@@ -39,6 +39,13 @@ def parse_args():
         required=True,
         help="The name you want to give your model checkpoint file.",
     )
+    parser.add_argument(
+        "--log_dir",
+        "-l",
+        type=str,
+        required=False,
+        help="The full path that contains the directory you want the logs to be in",
+    )
 
     return parser.parse_args()
 
@@ -89,27 +96,53 @@ def main(**kwargs):
 
     datasetdir = os.path.abspath(kwargs["dataset_dir"])
     regdir = os.path.abspath(kwargs["reg_dir"])
+    logdir = None
+    if "log_dir" in kwargs:
+        logdir = os.path.abspath(kwargs["log_dir"])
+        subprocess.call(
+            [
+                "docker",
+                "run",
+                "--name",
+                "rb-dreambooth",
+                "--gpus",
+                "all",
+                "-it",
+                "-d",
+                "-v",
+                os.path.join(script_dir, "v1-5-pruned.ckpt") + ":/home/engineering/v1-5-pruned.ckpt",
+                "-v",
+                datasetdir + ":/home/engineering/dataset-dir",
+                "-v",
+                regdir + ":/home/engineering/reg-dir",
+                "-v",
+                logdir + ":/home/engineering/log-dir",
+                "-d",
+                "rubbrband/dreambooth:latest",
+            ]
+        )
 
-    subprocess.call(
-        [
-            "docker",
-            "run",
-            "--name",
-            "rb-dreambooth",
-            "--gpus",
-            "all",
-            "-it",
-            "-d",
-            "-v",
-            os.path.join(script_dir, "v1-5-pruned.ckpt") + ":/home/engineering/v1-5-pruned.ckpt",
-            "-v",
-            datasetdir + ":/home/engineering/dataset-dir",
-            "-v",
-            regdir + ":/home/engineering/reg-dir",
-            "-d",
-            "rubbrband/dreambooth:latest",
-        ]
-    )
+    else:
+        subprocess.call(
+            [
+                "docker",
+                "run",
+                "--name",
+                "rb-dreambooth",
+                "--gpus",
+                "all",
+                "-it",
+                "-d",
+                "-v",
+                os.path.join(script_dir, "v1-5-pruned.ckpt") + ":/home/engineering/v1-5-pruned.ckpt",
+                "-v",
+                datasetdir + ":/home/engineering/dataset-dir",
+                "-v",
+                regdir + ":/home/engineering/reg-dir",
+                "-d",
+                "rubbrband/dreambooth:latest",
+            ]
+        )
 
     class_word = kwargs["class_word"]
     model_name = kwargs["model_name"]
@@ -120,15 +153,25 @@ def main(**kwargs):
 
     if num_images < 50:
         print("You should have least 100 images to finetune the model. Otherwise, you may not get good results")
-
-    conda_cmd = (
-        "conda run --no-capture-output -n ldm",
-        "python /home/engineering/JoePenna-Dreambooth/main.py "
-        "--base /home/engineering/JoePenna-Dreambooth/configs/stable-diffusion/v1-finetune_unfrozen.yaml",
-        f"-t --actual_resume /home/engineering/v1-5-pruned.ckpt -n {model_name} --gpus 0,",
-        "--data_root /home/engineering/dataset-dir --reg_data_root /home/engineering/reg-dir",
-        f"--token rbsubject --class_word {class_word} --max_training_steps {training_steps} --no-test",
-    )
+    if logdir:
+        conda_cmd = (
+            "conda run --no-capture-output -n ldm",
+            "python /home/engineering/JoePenna-Dreambooth/main.py "
+            "--base /home/engineering/JoePenna-Dreambooth/configs/stable-diffusion/v1-finetune_unfrozen.yaml",
+            f"-t --actual_resume /home/engineering/v1-5-pruned.ckpt -n {model_name} --gpus 0,",
+            "--data_root /home/engineering/dataset-dir --reg_data_root /home/engineering/reg-dir",
+            f"--token rbsubject --class_word {class_word} --max_training_steps {training_steps} --no-test",
+            "--log_dir /home/engineering/log-dir",
+        )
+    else:
+        conda_cmd = (
+            "conda run --no-capture-output -n ldm",
+            "python /home/engineering/JoePenna-Dreambooth/main.py "
+            "--base /home/engineering/JoePenna-Dreambooth/configs/stable-diffusion/v1-finetune_unfrozen.yaml",
+            f"-t --actual_resume /home/engineering/v1-5-pruned.ckpt -n {model_name} --gpus 0,",
+            "--data_root /home/engineering/dataset-dir --reg_data_root /home/engineering/reg-dir",
+            f"--token rbsubject --class_word {class_word} --max_training_steps {training_steps} --no-test",
+        )
 
     subprocess.call(
         " ".join(["docker", "exec", "-it", "rb-dreambooth", "/bin/bash", "-c", f"'{' '.join(conda_cmd)}'"]), shell=True
