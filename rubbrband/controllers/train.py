@@ -31,9 +31,9 @@ def dreambooth(
     ),
     reg_dir: str = typer.Option(..., help="The full path that contains the regularization images."),
     dataset_dir: str = typer.Option(..., help="The full path that contains the images you want to fine-tune on"),
-    model_name: str = typer.Option(help="The name you want to give your model checkpoint file", default=""),
-    log_dir: str = typer.Option(
-        help="The full path that contains the directory you want the logs to be in", default=""
+    log_dir: str = typer.Option(..., help="The full path that contains the directory you want the logs to be in"),
+    model_name: str = typer.Option(
+        help="The name you want to give your model checkpoint file", default="rubbrband-dreambooth"
     ),
 ):
     train(ctx, "dreambooth")

@@ -23,7 +23,7 @@ mkdir regDir
 mv ./Stable-Diffusion-Regularization-Images/man_unsplash ./regDir/man
 
 # start training
-rubbrband train dreambooth --class-word man --dataset-dir ./sample_dataset --reg-dir ./regDir --model-name testmodel --log-dir ./logs
+rubbrband train dreambooth --class-word man --dataset-dir ./sample_dataset --reg-dir ./regDir --log-dir ./logs
 ```
 
 Training should take about 3 hours on an A100 gpu.
