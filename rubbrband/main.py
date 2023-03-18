@@ -2,11 +2,11 @@ import subprocess
 
 import docker
 import typer
-from version import VERSION
 from yaspin import yaspin
 
 from rubbrband.clients import docker_client
 from rubbrband.controllers import eval, train, web
+from rubbrband.version import VERSION
 
 __author__ = "Rubbrband"
 
