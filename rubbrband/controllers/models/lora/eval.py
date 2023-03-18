@@ -5,7 +5,7 @@ import subprocess
 def parse_args():
     """Parse lora eval arguments."""
     parser = argparse.ArgumentParser(description="Eval lora inside a Docker container")
-    parser.add_argument("-i", "--input_prompt", required=True, help="Input prompt passed to your finetuned model")
+    parser.add_argument("-i", "--input_prompt", required=True, help="Input prompt passed to your fine-tuned model")
     return parser.parse_args()
 
 

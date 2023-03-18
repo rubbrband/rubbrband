@@ -64,7 +64,7 @@ def get_container(container_name):
         return
 
     if container.status != "running":
-        typer.echo("Model is not running, attemping to start model.")
+        typer.echo("Model is not running, attempting to start model.")
         try:
             container.start()
         except docker.errors.APIError:

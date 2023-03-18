@@ -31,7 +31,7 @@ def dreambooth(
     eval(ctx, "dreambooth")
 
 
-@app.command(rich_help_panel="Models :robot:", help="Low-rank adapation for efficient stable diffusion fine tuning")
+@app.command(rich_help_panel="Models :robot:", help="Low-rank adaptation for efficient stable diffusion fine-tuning")
 def lora(
     ctx: typer.Context,
     input_prompt: str = typer.Option(..., help="The prompt to input into the trained model."),
@@ -48,7 +48,7 @@ def control_callback(annotator_type: str):
         return
 
 
-@app.command(rich_help_panel="Models :robot:", help="Low-rank adapation for efficient stable diffusion fine tuning")
+@app.command(rich_help_panel="Models :robot:", help="Low-rank adaptation for efficient stable diffusion fine-tuning")
 def control(
     ctx: typer.Context,
     annotator_type: str = typer.Option(..., callback=control_callback, help="The edge detector to use."),

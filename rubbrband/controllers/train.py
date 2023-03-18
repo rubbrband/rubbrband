@@ -30,7 +30,7 @@ def dreambooth(
         ..., help="The name that you want to give to the class of images that you'll want to generate"
     ),
     reg_dir: str = typer.Option(..., help="The full path that contains the regularization images."),
-    dataset_dir: str = typer.Option(..., help="The full path that contains the images you want to finetune on"),
+    dataset_dir: str = typer.Option(..., help="The full path that contains the images you want to fine-tune on"),
     model_name: str = typer.Option(help="The name you want to give your model checkpoint file", default=""),
     log_dir: str = typer.Option(
         help="The full path that contains the directory you want the logs to be in", default=""
@@ -39,10 +39,10 @@ def dreambooth(
     train(ctx, "dreambooth")
 
 
-@app.command(rich_help_panel="Models :robot:", help="Low-rank adapation for efficient stable diffusion fine tuning")
+@app.command(rich_help_panel="Models :robot:", help="Low-rank adaptation for efficient stable diffusion fine-tuning")
 def lora(
     ctx: typer.Context,
-    dataset_dir: str = typer.Option(..., help="The full path that contains the images you want to finetune on"),
+    dataset_dir: str = typer.Option(..., help="The full path that contains the images you want to fine-tune on"),
 ):
     train(ctx, "lora")
 
@@ -50,7 +50,7 @@ def lora(
 @app.command(rich_help_panel="Models :robot:", help="Control diffusion models by adding extra conditions")
 def control(
     ctx: typer.Context,
-    dataset_dir: str = typer.Option(..., help="The full path that contains the images you want to finetune on"),
+    dataset_dir: str = typer.Option(..., help="The full path that contains the images you want to fine-tune on"),
 ):
     train(ctx, "control")
 

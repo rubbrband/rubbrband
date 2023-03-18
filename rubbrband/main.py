@@ -26,7 +26,7 @@ except docker.errors.DockerException:
 # create our database of models
 db = {
     "lora": {
-        "description": "Low-rank adapation for efficient stable diffusion fine tuning",
+        "description": "Low-rank adaptation for efficient stable diffusion fine-tuning",
         "shape": "anything",
     },
     "dreambooth": {
@@ -50,7 +50,6 @@ web.client = client
 train.db = db
 eval.db = db
 web.db = db
-
 
 @app.callback()
 def main():
@@ -194,7 +193,6 @@ def enter(model: str):
             container.start()
 
     subprocess.run(["docker", "exec", "-it", container_name, "/bin/bash"])
-
 
 if __name__ == "__main__":
     app()

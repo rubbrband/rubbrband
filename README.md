@@ -2,13 +2,13 @@
 
 ![rubbrband train image](https://lh3.googleusercontent.com/u/0/drive-viewer/AAOQEOSUMegyjMpYrbtErUyXXPoE_pVDwFZEVwQd14V9nZryxmlRKIJOHsS98ORQyIJGhv83xWsioXMsH4S2PahOFVmDwmbb=w2966-h2118)
 
-Rubbrband lets you rapidly fine-tune and evalaute the latest open-source machine learning models. Rubbrband installs dependencies, exposes training and inference commands from a CLI interface.
+Rubbrband lets you rapidly fine-tune and evaluate the latest open-source machine learning models. Rubbrband installs dependencies, exposes training and inference commands from a CLI interface.
 
 ## Getting Started Example
 
 Rubbrband uses Docker to create separate, working training environments on your machine. Here is the [installation guide for Docker](https://docs.docker.com/engine/install/). If you need help, [contact us on discord](https://discord.gg/BW3R9yK7Fh)
 
-Here is a snippet code that downloads a dummy dataset, and starts finetuning Dreambooth for you. Be sure to have a graphics card with at least 24GB of VRAM. We recommend you use a A100 GPU for this task on Lambda Labs or Runpod.
+Here is a snippet code that downloads a dummy dataset, and starts fine-tuning Dreambooth for you. Be sure to have a graphics card with at least 24GB of VRAM. We recommend you use a A100 GPU for this task on Lambda Labs or Runpod.
 
 If you're on Linux, make sure to run `sudo su` before all of these commands. This is because Docker-py needs root access.
 
@@ -23,7 +23,7 @@ mkdir regDir
 mv ./Stable-Diffusion-Regularization-Images/man_unsplash ./regDir/man
 
 # start training
-rubbrband train dreambooth --class-word man --dataset-dir ./sample_dataset --reg-dir ./regDir --model-name testmodel
+rubbrband train dreambooth --class-word man --dataset-dir ./sample_dataset --reg-dir ./regDir --model-name testmodel --log-dir ./logs
 ```
 
 Training should take about 3 hours on an A100 gpu.
@@ -53,7 +53,7 @@ rubbrband copy-to sd-webui /path/to/last.ckpt /home/engineering/stable-diffusion
 Then, visit the link to your webui at `http://localhost:7860` and use your new checkpoint file.
 
 ## FAQ
-**How many samples do I need for Dreambooth finetuning on a person?**
+**How many samples do I need for Dreambooth fine-tuning on a person?**
 
 We recommend you use 50 images of a person, if you want great results. If you want to generate a variety of different images of a person, you may want to try 20-30 very different images of a person, in different lighting conditions and clothing, from different angles.
 
@@ -63,9 +63,9 @@ If you aim to generate a sequence of images with the person looking a specific w
 - 20 medium shots from different angles
 - 10 far away shots
 
-**What should the folder structure be for finetuning on a person?**
+**What should the folder structure be for fine-tuning on a person?**
 
-We recommend you download the sample dataset above.  Essentially, the person you want to finetune on will be given automatically be given a token called `rbsubject`. Your dataset folder structure should be as follows
+We recommend you download the sample dataset above.  Essentially, the person you want to fine-tune on will be given automatically be given a token called `rbsubject`. Your dataset folder structure should be as follows
 
 ``` 
 -> dataset-dir
@@ -74,7 +74,7 @@ We recommend you download the sample dataset above.  Essentially, the person you
       -> your images
 ```
 
-**Can I finetune on multiple subjects?**
+**Can I fine-tune on multiple subjects?**
 
 Yes! Make sure to put your alternate subjects as tokens in your dataset-dir. This should follow the same structure as the default `rbsubject` subject. You won't need to specify the other subjects in your CLI command for training. Make sure to get regularization images for this subjects class_name as well.
 
