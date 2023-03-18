@@ -1,4 +1,5 @@
 import configparser
+import os
 import subprocess
 
 import docker
@@ -55,7 +56,8 @@ web.db = db
 
 def get_version():
     config = configparser.ConfigParser()
-    config.read("../setup.cfg")
+    config_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "setup.cfg")
+    config.read(config_path)
     return config.get("metadata", "version")
 
 
