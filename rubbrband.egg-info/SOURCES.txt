@@ -6,6 +6,7 @@ setup.cfg
 setup.py
 rubbrband/__init__.py
 rubbrband/main.py
+rubbrband/version.py
 rubbrband.egg-info/PKG-INFO
 rubbrband.egg-info/SOURCES.txt
 rubbrband.egg-info/dependency_links.txt

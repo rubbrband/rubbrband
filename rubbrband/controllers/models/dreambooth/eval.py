@@ -6,7 +6,7 @@ def parse_args():
     """Parse dreambooth eval arguments."""
     parser = argparse.ArgumentParser(description="Run a Docker container with Dreambooth stable_txt2img.py")
     parser.add_argument(
-        "-i", "--input_prompt", type=str, required=True, help="Input prompt passed to your finetuned model"
+        "-i", "--input_prompt", type=str, required=True, help="Input prompt passed to your fine-tuned model"
     )
     parser.add_argument(
         "-l",

@@ -6,6 +6,7 @@ from yaspin import yaspin
 
 from rubbrband.clients import docker_client
 from rubbrband.controllers import eval, train, web
+from rubbrband.version import VERSION
 
 __author__ = "Rubbrband"
 
@@ -26,7 +27,7 @@ except docker.errors.DockerException:
 # create our database of models
 db = {
     "lora": {
-        "description": "Low-rank adapation for efficient stable diffusion fine tuning",
+        "description": "Low-rank adaptation for efficient stable diffusion fine-tuning",
         "shape": "anything",
     },
     "dreambooth": {
@@ -194,6 +195,12 @@ def enter(model: str):
             container.start()
 
     subprocess.run(["docker", "exec", "-it", container_name, "/bin/bash"])
+
+
+@app.command()
+def version():
+    """Display the current version of the application"""
+    typer.echo(f"Rubbrband CLI version: {VERSION}")
 
 
 if __name__ == "__main__":

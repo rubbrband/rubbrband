@@ -10,7 +10,7 @@ import requests
 def parse_args():
     """Parse dreambooth train arguments."""
 
-    parser = argparse.ArgumentParser(description="Finetune Dreambooth on a dataset with a regularization prompt")
+    parser = argparse.ArgumentParser(description="Fine-tune Dreambooth on a dataset with a regularization prompt")
     parser.add_argument(
         "--class_word",
         "-c",
@@ -23,7 +23,7 @@ def parse_args():
         "-d",
         type=str,
         required=True,
-        help="The full path that contains the images you want to finetune on.",
+        help="The full path that contains the images you want to fine-tune on.",
     )
     parser.add_argument(
         "--reg_dir",
@@ -76,7 +76,7 @@ def main(**kwargs):
     gpu_ready = check_gpu()
 
     if not gpu_ready:
-        print("You need a GPU with at least 25GB VRAM to finetune the model.")
+        print("You need a GPU with at least 25GB VRAM to fine-tune the model.")
         sys.exit(1)
 
     if not os.path.isfile(ckpt_path):
@@ -154,7 +154,7 @@ def main(**kwargs):
     training_steps = num_images * 70
 
     if num_images < 50:
-        print("You should have least 100 images to finetune the model. Otherwise, you may not get good results")
+        print("You should have least 100 images to fine-tune the model. Otherwise, you may not get good results")
     if logdir:
         conda_cmd = (
             "conda run --no-capture-output -n ldm",
