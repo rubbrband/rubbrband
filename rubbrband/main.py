@@ -55,7 +55,7 @@ web.db = db
 
 def get_version():
     config = configparser.ConfigParser()
-    config.read("setup.cfg")
+    config.read("../setup.cfg")
     return config.get("metadata", "version")
 
 
