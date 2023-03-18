@@ -1,3 +1,4 @@
+import configparser
 import subprocess
 
 import docker
@@ -6,7 +7,6 @@ from yaspin import yaspin
 
 from rubbrband.clients import docker_client
 from rubbrband.controllers import eval, train, web
-import configparser
 
 __author__ = "Rubbrband"
 
@@ -52,10 +52,12 @@ train.db = db
 eval.db = db
 web.db = db
 
+
 def get_version():
     config = configparser.ConfigParser()
-    config.read('setup.cfg')
-    return config.get('metadata', 'version')
+    config.read("setup.cfg")
+    return config.get("metadata", "version")
+
 
 @app.callback()
 def main():
@@ -200,10 +202,12 @@ def enter(model: str):
 
     subprocess.run(["docker", "exec", "-it", container_name, "/bin/bash"])
 
+
 @app.command()
 def version():
     """Display the current version of the application"""
     typer.echo(f"Rubbrband CLI version: {get_version()}")
+
 
 if __name__ == "__main__":
     app()
