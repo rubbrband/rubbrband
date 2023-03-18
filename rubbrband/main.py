@@ -1,9 +1,8 @@
-import configparser
-import os
 import subprocess
 
 import docker
 import typer
+from version import VERSION
 from yaspin import yaspin
 
 from rubbrband.clients import docker_client
@@ -52,13 +51,6 @@ web.client = client
 train.db = db
 eval.db = db
 web.db = db
-
-
-def get_version():
-    config = configparser.ConfigParser()
-    config_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "setup.cfg")
-    config.read(config_path)
-    return config.get("metadata", "version")
 
 
 @app.callback()
@@ -208,7 +200,7 @@ def enter(model: str):
 @app.command()
 def version():
     """Display the current version of the application"""
-    typer.echo(f"Rubbrband CLI version: {get_version()}")
+    typer.echo(f"Rubbrband CLI version: {VERSION}")
 
 
 if __name__ == "__main__":
