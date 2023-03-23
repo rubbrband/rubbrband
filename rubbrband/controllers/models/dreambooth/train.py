@@ -47,7 +47,6 @@ def parse_args():
         required=False,
         help="The full path that contains the directory you want the logs to be in",
     )
-
     return parser.parse_args()
 
 
@@ -96,6 +95,24 @@ def main(**kwargs):
         subprocess.call(["docker", "rm", "rb-dreambooth"])
 
     datasetdir = os.path.abspath(kwargs["dataset_dir"])
+
+    # find the token for the dataset directory
+    # go inside the dataset directory, and find the names of the directories
+    # inside it. The first directory to have another directory called class-name inside it
+    # is the token
+    token = None
+    for dir in os.listdir(datasetdir):
+        if os.path.isdir(os.path.join(datasetdir, dir)):
+            if os.path.isdir(os.path.join(datasetdir, dir, kwargs["class_word"])):
+                token = dir
+                break
+    if token is None:
+        print(
+            "The dataset-directory is not in the correct format. \
+              Refer to https://rubbrband.gitbook.io/cli-docs/training-models/dreambooth to correct it."
+        )
+        sys.exit(1)
+
     regdir = os.path.abspath(kwargs["reg_dir"])
     logdir = os.path.abspath(kwargs["log_dir"])
 
@@ -146,7 +163,7 @@ def main(**kwargs):
         "python /home/engineering/JoePenna-Dreambooth/main.py "
         "--base /home/engineering/JoePenna-Dreambooth/configs/stable-diffusion/v1-finetune_unfrozen.yaml",
         f"-t --actual_resume /home/engineering/v1-5-pruned.ckpt -n {model_name} --gpus 0,",
-        f"--token rbsubject --class_word {class_word} --max_training_steps {training_steps} --no-test",
+        f"--token {token} --class_word {class_word} --max_training_steps {training_steps} --no-test",
         "--data_root /home/engineering/dataset-dir --reg_data_root /home/engineering/reg-dir",
         "--logdir /home/engineering/log-dir",
     )
