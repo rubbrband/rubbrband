@@ -9,9 +9,9 @@ def main():
     """Run the webui script."""
 
     script_dir = os.path.dirname(os.path.realpath(__file__))
-    ckpt_path = os.path.join(script_dir, "sd-v1-4-full-ema.ckpt")
+    ckpt_path = os.path.join(script_dir, "v1-5-pruned-emaonly.ckpt")
     if not os.path.isfile(ckpt_path):
-        url = "https://huggingface.co/CompVis/stable-diffusion-v-1-4-original/resolve/main/sd-v1-4-full-ema.ckpt"
+        url = "https://huggingface.co/runwayml/stable-diffusion-v1-5/resolve/main/v1-5-pruned-emaonly.ckpt"
         response = requests.get(url)
         if response.status_code == 200:
             with open(ckpt_path, "wb") as f:
@@ -35,8 +35,7 @@ def main():
             "-it",
             "-d",
             "-v",
-            os.path.join(script_dir, "sd-v1-4-full-ema.ckpt")
-            + ":/home/engineering/stable-diffusion-webui/models/Stable-diffusion/sd-v1-4-full-ema.ckpt",
+            ckpt_path + ":/home/engineering/stable-diffusion-webui/models/Stable-diffusion/v1-5-pruned-emaonly.ckpt",
             "-d",
             "rubbrband/sd-webui:latest",
         ]
