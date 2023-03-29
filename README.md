@@ -1,6 +1,6 @@
 # Rubbrband
 
-![rubbrband train image](https://lh3.googleusercontent.com/u/0/drive-viewer/AAOQEOSUMegyjMpYrbtErUyXXPoE_pVDwFZEVwQd14V9nZryxmlRKIJOHsS98ORQyIJGhv83xWsioXMsH4S2PahOFVmDwmbb=w2966-h2118)
+![rubbrband train image](https://raw.githubusercontent.com/rubbrband/img/main/cli.png)
 
 Rubbrband lets you rapidly fine-tune and evaluate the latest open-source machine learning models. Rubbrband installs dependencies, exposes training and inference commands from a CLI interface.
 
