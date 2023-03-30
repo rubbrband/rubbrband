@@ -10,10 +10,10 @@ def parse_args():
     )
     parser.add_argument(
         "-l",
-        "--logdir",
+        "--log_dir",
         type=str,
-        help="the directory containing the experiment logs (default: experiment_logs)",
-        default="experiment_logs",
+        help="Path inside the container that contains the checkpoint file",
+        default="/home/engineering/log-dir/*/checkpoints/last.ckpt",
     )
     return parser.parse_args()
 
@@ -22,13 +22,14 @@ def main(**kwargs):
     """Run the dreambooth eval script."""
     # Execute the command inside a Docker container
     cmd = (
-        f"python scripts/stable_txt2img.py "
+        f"conda run --no-capture-output -n ldm "
+        f"python /home/engineering/JoePenna-Dreambooth/scripts/stable_txt2img.py "
         f"--ddim_eta 0.0 "
         f"--n_samples 8 "
         f"--n_iter 1 "
         f"--scale 10.0 "
         f"--ddim_steps 100 "
-        f"--ckpt {kwargs['logdir']}/*/checkpoints/last.ckpt "
+        f"--ckpt {kwargs['log_dir']} "
         f"--prompt '{kwargs['input_prompt']}' "
         f"--outdir /home/engineering/samples"
     )

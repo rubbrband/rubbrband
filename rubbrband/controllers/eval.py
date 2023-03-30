@@ -26,7 +26,10 @@ def main():
 def dreambooth(
     ctx: typer.Context,
     input_prompt: str = typer.Option(..., help="The prompt to input into the trained model."),
-    logdir: str = "experiment_logs",
+    log_dir: str = typer.Option(
+        help="Path inside the container that contains the checkpoint file",
+        default="/home/engineering/log-dir/*/checkpoints/last.ckpt",
+    ),
 ):
     eval(ctx, "dreambooth")
 
