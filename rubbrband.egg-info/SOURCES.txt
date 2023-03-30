@@ -40,4 +40,3 @@ rubbrband/controllers/models/nanoGPT/library-scripts/common-debian.sh
 rubbrband/controllers/models/nanoGPT/library-scripts/infer.py
 rubbrband/controllers/models/sd_webui/Dockerfile
 rubbrband/controllers/models/sd_webui/web.py
-rubbrband/controllers/models/sd_webui/library-scripts/common-debian.sh
