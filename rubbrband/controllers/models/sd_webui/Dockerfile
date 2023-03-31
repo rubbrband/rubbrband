@@ -7,7 +7,7 @@ RUN sudo apt-get update \
 ARG PIP_DISABLE_PIP_VERSION_CHECK=1
 ARG PIP_NO_CACHE_DIR=1
 
-RUN (pip install gradio==3.23 || echo pip install failed)
+RUN (pip install gradio==3.16.2 || echo pip install failed)
 RUN (pip install realesrgan || echo pip install failed)
 RUN (pip install clip || echo pip install failed) \ 
 && (pip install scikit-image>=0.19 || echo pip install failed) 
@@ -60,6 +60,9 @@ USER engineering
 
 WORKDIR /home/engineering
 
-RUN git clone --depth 1 https://github.com/AUTOMATIC1111/stable-diffusion-webui.git
+RUN curl -L -o commit.tar.gz https://github.com/AUTOMATIC1111/stable-diffusion-webui/archive/803d44c4740f3de6b35fb7b9e3981a5eaf18b070.tar.gz \
+    && tar -xzf commit.tar.gz \
+    && mv stable-diffusion-webui* stable-diffusion-webui \
+    && rm -rf commit.tar.gz
 
 WORKDIR /home/engineering/stable-diffusion-webui
