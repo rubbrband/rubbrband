@@ -11,20 +11,26 @@ except docker.errors.DockerException:
     exit()
 
 
-# Show task progress (red for download, green for extract)
 def show_progress(line, progress):
+    """Show progress of a docker pull (red for download, green for extract)"""
     if line["status"] == "Downloading":
         id = f'[red][Download {line["id"]}]'
     elif line["status"] == "Extracting":
-        id = f'[green][Extract  {line["id"]}]'
+        id = f'[green][Extract {line["id"]}]'
     else:
         # skip other statuses
         return
 
-    if id not in tasks.keys():
+    if id not in tasks:
         tasks[id] = progress.add_task(f"{id}", total=line["progressDetail"]["total"])
     else:
         progress.update(tasks[id], completed=line["progressDetail"]["current"])
+
+    # remove the download task if complete
+    download_id = f'[red][Download {line["id"]}]'
+    if line["status"] == "Extracting" and download_id in tasks:
+        progress.remove_task(tasks[download_id])
+        del tasks[download_id]
 
 
 def pull_image(image_name):
