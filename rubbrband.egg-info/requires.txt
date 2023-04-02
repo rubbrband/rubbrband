@@ -3,3 +3,5 @@ yaspin
 typer>=0.7.0
 rich
 GPUtil
+rembg
+smartcrop

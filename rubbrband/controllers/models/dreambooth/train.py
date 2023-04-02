@@ -6,6 +6,7 @@ from datetime import datetime
 
 import GPUtil
 import requests
+from PIL import Image
 
 
 def parse_args():
@@ -67,6 +68,41 @@ def check_gpu():
         return False
 
 
+# a function that runs smartcroppy and rembg on the images in the dataset and stores them in a new directory
+def preprocess_dataset(dataset_dir, size=512, folder_name="cropped_training_data"):
+    """Preprocess the dataset."""
+
+    new_dataset_dir = os.path.join(os.path.dirname(dataset_dir), folder_name)
+
+    if not os.path.exists(new_dataset_dir):
+        os.mkdir(new_dataset_dir)
+
+    for root, dirs, files in os.walk(dataset_dir):
+        for name in files:
+            # check if the file is an image
+            if name.lower().endswith((".png", ".jpg", ".jpeg", ".bmp")):
+                # create the subdirectory in the output folder
+                subdirectory = os.path.relpath(root, dataset_dir)
+                output_subdirectory = os.path.join(new_dataset_dir, subdirectory)
+                if not os.path.exists(output_subdirectory):
+                    os.makedirs(output_subdirectory)
+
+                # load the image with SmartCroppy and resize it to 512x512
+                input_path = os.path.join(root, name)
+                output_path = os.path.join(output_subdirectory, name)
+
+                img = Image.open(input_path)
+                if img.mode == "RGBA":
+                    # If the image is in RGBA mode, convert it to RGB
+                    img = img.convert("RGB")
+                    # Overwrite the original image file with the converted image
+                    img.save(input_path)
+
+                subprocess.run(["smartcroppy", "--width", str(size), "--height", str(size), input_path, output_path])
+
+    return new_dataset_dir
+
+
 def main(**kwargs):
     """Run the dreambooth train script."""
 
@@ -96,6 +132,10 @@ def main(**kwargs):
 
     datasetdir = os.path.abspath(kwargs["dataset_dir"])
 
+    print("Cropping training dataset...")
+
+    datasetdir = preprocess_dataset(datasetdir, size=512, folder_name="cropped_training_data")
+
     # find the token for the dataset directory
     # go inside the dataset directory, and find the names of the directories
     # inside it. The first directory to have another directory called class-name inside it
@@ -113,7 +153,8 @@ def main(**kwargs):
         )
         sys.exit(1)
 
-    regdir = os.path.abspath(kwargs["reg_dir"])
+    print("Cropping regulization dataset...")
+    regdir = preprocess_dataset(os.path.abspath(kwargs["reg_dir"]), size=512, folder_name="cropped_regularization_data")
     logdir = os.path.abspath(kwargs["log_dir"])
 
     subprocess.call(
