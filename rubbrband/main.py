@@ -1,4 +1,5 @@
 import subprocess
+from typing import Optional
 
 import docker
 import typer
@@ -9,6 +10,7 @@ from rubbrband.controllers import eval, train, web
 from rubbrband.version import VERSION
 
 __author__ = "Rubbrband"
+__version__ = VERSION
 
 app = typer.Typer(no_args_is_help=True, rich_markup_mode="rich")
 app.add_typer(train.app, name="train", subcommand_metavar="MODEL")
@@ -53,8 +55,19 @@ eval.db = db
 web.db = db
 
 
+def version_callback(value: bool):
+    """Display the current version of Rubbrband"""
+    if value:
+        typer.echo(f"Rubbrband CLI version: {__version__}")
+        raise typer.Exit()
+
+
 @app.callback()
-def main():
+def main(
+    version: Optional[bool] = typer.Option(
+        None, "--version", help="Display the current version of Rubbrband", callback=version_callback, is_eager=True
+    ),
+):
     """
     The Rubbrband CLI allows you to rapidly train and evaluate models.
     """
@@ -195,12 +208,6 @@ def enter(model: str):
             container.start()
 
     subprocess.run(["docker", "exec", "-it", container_name, "/bin/bash"])
-
-
-@app.command()
-def version():
-    """Display the current version of the application"""
-    typer.echo(f"Rubbrband CLI version: {VERSION}")
 
 
 if __name__ == "__main__":
