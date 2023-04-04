@@ -46,7 +46,7 @@ mv ./Stable-Diffusion-Regularization-Images/man_unsplash ./regDir/man
 rubbrband train dreambooth --class-word man --dataset-dir ./sample_dataset --reg-dir ./regDir --log-dir ./logs
 ```
 
-Training should take about 3 hours on an A100 gpu.
+Training should take about 2 hours on an A10 gpu.
 
 ## View results in Automatic1111 WebUI
 
