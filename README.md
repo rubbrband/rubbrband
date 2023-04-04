@@ -15,9 +15,10 @@ which means you can finetune in just 1 line.
 
 Rubbrband automatically crop your datasets to the right size(usually 512x512) with a focus on the subject.
 
-**Automatic1111 Built-In**
+**Seamless integration with Automatic1111**
 
-Use the `rubbrband web` command to launch Stable Diffusion Web-UI and see results using your checkpoint file.
+Once you finetune Dreambooth, the CLI automatically moves your trained checkpoint into Stable-Diffusion-WebUI.
+Launch Automatic1111 to start experimenting with your finetuned model with `rubbrband web sd-webui`.
 
 **Automatic Checkpoint Downloads**
 
@@ -27,7 +28,7 @@ Rubbrband automatically downloads the latest SD checkpoints from HuggingFace so 
 
 Rubbrband uses Docker to create separate, working training environments on your machine. Here is the [installation guide for Docker](https://docs.docker.com/engine/install/). If you need help, [contact us on discord](https://discord.gg/BW3R9yK7Fh)
 
-Here is a snippet code that downloads a dummy dataset, and starts fine-tuning Dreambooth for you. Be sure to have a graphics card with at least 24GB of VRAM. We recommend you use a A100 GPU for this task on Lambda Labs or Runpod.
+Here is a snippet code that downloads a dummy dataset, and starts fine-tuning Dreambooth for you. Be sure to have a graphics card with at least 24GB of VRAM. We recommend you use a A10 GPU for this task on Lambda Labs or Runpod.
 
 If you're on Linux, make sure to run `sudo su` before all of these commands. This is because Docker-py needs root access.
 
@@ -97,6 +98,25 @@ We recommend you download the sample dataset above. Essentially, the person you 
 **Can I fine-tune on multiple subjects?**
 
 Yes! Make sure to put your alternate subjects as tokens in your dataset-dir. This should follow the same structure as the default `rbsubject` subject. You won't need to specify the other subjects in your CLI command for training. Make sure to get regularization images for this subjects class_name as well.
+
+## TODO
+
+**Reduce hallucinations**
+
+Often, your finetuned model will not properly learn the characteristics of subjects on the first run. In order to
+fix this, you can generate samples of your subject using your new checkpoint, manually select the best samples,
+and re-finetune the model with these generated samples in the dataset. This is particularly useful in the case of
+a video to video model, where consistency of outputs is critical.
+
+We want Rubbrband to be able to intelligently select the best samples from a training, and kick off a new training run automatically until the model does not hallucinate.
+
+**Better web interface**
+
+Build a web interface that supports video2video, and things like tracking subjects and perhaps autogenerate great prompts for your finetuned model using GPT.
+
+**Multiple GPU training for DreamBooth**
+
+Currently, we are using the JoePenna repo for training Dreambooth. This model doesn't support multi-GPU training.
 
 ## How it works
 

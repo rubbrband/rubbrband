@@ -5,7 +5,7 @@ import sys
 import requests
 
 
-def main():
+def main(dreambooth_checkpoint: str = None):
     """Run the webui script."""
 
     script_dir = os.path.dirname(os.path.realpath(__file__))
@@ -40,6 +40,16 @@ def main():
             "rubbrband/sd-webui:latest",
         ]
     )
+
+    if dreambooth_checkpoint:
+        subprocess.run(
+            [
+                "docker",
+                "cp",
+                dreambooth_checkpoint,
+                "rb-sd-webui:/home/engineering/stable-diffusion-webui/models/Stable-diffusion/last.ckpt",
+            ]
+        )
 
     subprocess.call(
         [

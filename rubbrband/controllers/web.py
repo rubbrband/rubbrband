@@ -21,14 +21,15 @@ def main():
 @app.command(rich_help_panel="Models :robot:", help="Webui for stable diffusion models")
 def sd_webui(
     ctx: typer.Context,
+    dreambooth_checkpoint: str = typer.Option(help="Optional path to a dreambooth checkpoint.", default=None),
 ):
-    web(ctx, "sd-webui")
+    web(ctx, "sd-webui", dreambooth_checkpoint)
 
 
-def handle_model_web(params: dict, model: str):
+def handle_model_web(params: dict, model: str, dreambooth_checkpoint: str):
     """Handle which model to run."""
     if model == "sd-webui":
-        web_sd_webui()
+        web_sd_webui(dreambooth_checkpoint)
     else:
         typer.echo(f"Model {model} not found")
 
@@ -36,7 +37,7 @@ def handle_model_web(params: dict, model: str):
 # '''name''' corresponds to the name column in db.csv
 # the option '''-d''' or '''--dataset_dir''' is the path to the dataset directory
 # this directory gets mounted to the container at /home/engineering/data
-def web(ctx: typer.Context, model: str):
+def web(ctx: typer.Context, model: str, dreambooth_checkpoint: str):
     """Entrypoint for training a model."""
     if model not in db:
         typer.echo("Model not found")
@@ -58,7 +59,7 @@ def web(ctx: typer.Context, model: str):
     except docker.errors.NotFound:
         pass
 
-    handle_model_web(ctx.params, model)
+    handle_model_web(ctx.params, model, dreambooth_checkpoint)
 
 
 if __name__ == "__main__":

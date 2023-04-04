@@ -153,8 +153,7 @@ def main(**kwargs):
         )
         sys.exit(1)
 
-    print("Cropping regulization dataset...")
-    regdir = preprocess_dataset(os.path.abspath(kwargs["reg_dir"]), size=512, folder_name="cropped_regularization_data")
+    regdir = os.path.abspath(kwargs["reg_dir"])
     logdir = os.path.abspath(kwargs["log_dir"])
 
     subprocess.call(
@@ -213,6 +212,33 @@ def main(**kwargs):
 
     # run the docker container and save the output to a log file
     subprocess.call(f"script -c '{docker_cmd}' {logdir}/{log_file_name}", shell=True)
+
+    test_items = os.listdir(logdir)
+
+    # Find the timestamp directory by checking if each item is a directory
+    timestamp_dir = None
+    for item in test_items:
+        item_path = os.path.join(logdir, item)
+        if os.path.isdir(item_path):
+            timestamp_dir = item
+            break
+
+    # Make sure we found the timestamp directory
+    if timestamp_dir is None:
+        print("Could not find timestamp directory in test folder")
+    else:
+        # Get the full path to the last.ckpt file
+        last_ckpt_path = os.path.join(logdir, timestamp_dir, "checkpoints", "last.ckpt")
+
+        subprocess.call(
+            [
+                "rubbrband",
+                "web",
+                "sd-webui",
+                "--dreambooth-checkpoint",
+                last_ckpt_path,
+            ]
+        )
 
 
 if __name__ == "__main__":
