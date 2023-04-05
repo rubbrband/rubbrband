@@ -2,6 +2,7 @@ import argparse
 import os
 import shutil
 import subprocess
+import sys
 
 import requests
 
@@ -26,6 +27,13 @@ def main(**kwargs):
         gpu_arg = "--gpus all"
     else:
         gpu_arg = ""
+
+    if not os.path.isfile(os.path.join(kwargs["dataset_dir"], "prompt.json")):
+        print(
+            "The dataset directory is missing a prompt.json file. "
+            + "Please refer to the documentation for more information."
+        )
+        sys.exit(1)
 
     if "rb-control" in subprocess.check_output('docker ps -a --format "{{.Names}}"').decode("utf-8"):
         subprocess.call("docker stop rb-control")
