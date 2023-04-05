@@ -30,8 +30,8 @@ def main(**kwargs):
 
     if not os.path.isfile(os.path.join(kwargs["dataset_dir"], "prompt.json")):
         print(
-            """The dataset directory is missing a prompt.json file. \
-            Please refer to the documentation for more information."""
+            "The dataset directory is missing a prompt.json file."
+            + "Please refer to the documentation for more information."
         )
         sys.exit(1)
 
