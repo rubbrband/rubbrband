@@ -2,9 +2,11 @@
 
 ![rubbrband train image](https://raw.githubusercontent.com/rubbrband/img/main/cli.png)
 
-Rubbrband lets you rapidly fine-tune and evaluate the latest open-source machine learning models. Rubbrband installs dependencies, exposes training and inference commands from a CLI interface.
+## What is Rubbrband?
 
-## Features
+Rubbrband is a CLI that allows you to finetune Stable Diffusion models in just 1 command - so you can easily kickoff finetuning experiments rapidly without setup time or the need to write complex data pipelines.
+
+With Rubbrband, you can train models like Dreambooth with superpowers:
 
 **Automatic Environment Setup**
 
