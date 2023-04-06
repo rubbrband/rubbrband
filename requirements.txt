@@ -3,3 +3,4 @@ yaspin
 docker>=6.0.0
 rich
 GPUtil
+smartcrop
