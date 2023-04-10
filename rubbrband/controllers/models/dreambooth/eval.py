@@ -1,21 +1,4 @@
-import argparse
 import subprocess
-
-
-def parse_args():
-    """Parse dreambooth eval arguments."""
-    parser = argparse.ArgumentParser(description="Run a Docker container with Dreambooth stable_txt2img.py")
-    parser.add_argument(
-        "-i", "--input_prompt", type=str, required=True, help="Input prompt passed to your fine-tuned model"
-    )
-    parser.add_argument(
-        "-l",
-        "--log_dir",
-        type=str,
-        help="Path inside the container that contains the checkpoint file",
-        default="/home/engineering/log-dir/*/checkpoints/last.ckpt",
-    )
-    return parser.parse_args()
 
 
 def main(**kwargs):

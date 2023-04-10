@@ -1,17 +1,9 @@
-import argparse
 import os
 import shutil
 import subprocess
 import sys
 
 import requests
-
-
-def parse_args():
-    parser = argparse.ArgumentParser(description="Run Rubbrband ControlNet training script")
-    parser.add_argument("dataset_dir", help="Path to directory containing training data")
-
-    return parser.parse_args()
 
 
 def main(**kwargs):

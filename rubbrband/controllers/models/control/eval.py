@@ -1,17 +1,8 @@
-import argparse
 import os
 import shutil
 import subprocess
 
 import requests
-
-
-def parse_args():
-    """Parse control eval arguments."""
-    parser = argparse.ArgumentParser(description="Eval ControlNet inside a Docker container")
-    parser.add_argument("annotator_type", type=str, help="Type of ControlNet annotator to use")
-
-    return parser.parse_args()
 
 
 def main(**kwargs):

@@ -1,4 +1,3 @@
-import argparse
 import os
 import subprocess
 import sys
@@ -7,48 +6,6 @@ from datetime import datetime
 import GPUtil
 import requests
 from PIL import Image
-
-
-def parse_args():
-    """Parse dreambooth train arguments."""
-
-    parser = argparse.ArgumentParser(description="Fine-tune Dreambooth on a dataset with a regularization prompt")
-    parser.add_argument(
-        "--class_word",
-        "-c",
-        type=str,
-        required=True,
-        help="The name that you want to give to the class of images that you'll want to generate",
-    )
-    parser.add_argument(
-        "--dataset_dir",
-        "-d",
-        type=str,
-        required=True,
-        help="The full path that contains the images you want to fine-tune on.",
-    )
-    parser.add_argument(
-        "--reg_dir",
-        "-r",
-        type=str,
-        required=True,
-        help="The full path that contains the regularization images.",
-    )
-    parser.add_argument(
-        "--model_name",
-        "-n",
-        type=str,
-        required=True,
-        help="The name you want to give your model checkpoint file.",
-    )
-    parser.add_argument(
-        "--log_dir",
-        "-l",
-        type=str,
-        required=False,
-        help="The full path that contains the directory you want the logs to be in",
-    )
-    return parser.parse_args()
 
 
 def check_gpu():
