@@ -30,16 +30,12 @@ def main(**kwargs):
         subprocess.call(["docker", "stop", "rb-control"])
         subprocess.call(["docker", "rm", "rb-control"])
 
-    volumes = (
-        f"-v {os.path.join(script_dir, 'v1-5-pruned.ckpt')}:/home/engineering/ControlNet/models/v1-5-pruned.ckpt "
-        f"-v {os.path.abspath(kwargs['dataset_dir'])}:/home/engineering/ControlNet/training/fill50k"
-    )
     if gpu_arg:
-    	subprocess.call(
-    	    [
+        subprocess.call(
+            [
                 "docker",
-	        "run",
-	        "--name",
+                "run",
+                "--name",
                 "rb-control",
                 "--gpus",
                 "all",
@@ -48,7 +44,7 @@ def main(**kwargs):
                 "-v",
                 os.path.join(script_dir, "v1-5-pruned.ckpt") + ":/home/engineering/ControlNet/models/v1-5-pruned.ckpt",
                 "-v",
-                os.path.abspath(kwargs['dataset_dir']) + ":/home/engineering/ControlNet/training/fill50k",
+                os.path.abspath(kwargs["dataset_dir"]) + ":/home/engineering/ControlNet/training/fill50k",
                 "-d",
                 "rubbrband/control:latest",
             ]
@@ -65,21 +61,23 @@ def main(**kwargs):
                 "-v",
                 os.path.join(script_dir, "v1-5-pruned.ckpt") + ":/home/engineering/ControlNet/models/v1-5-pruned.ckpt",
                 "-v",
-                os.path.abspath(kwargs['dataset_dir']) + ":/home/engineering/ControlNet/training/fill50k",
+                os.path.abspath(kwargs["dataset_dir"]) + ":/home/engineering/ControlNet/training/fill50k",
                 "-d",
                 "rubbrband/control:latest",
             ]
         )
 
     conda_cmd = (
+        "conda run --no-capture-output -n control sudo chmod 777 ./* && "
         "conda run --no-capture-output -n control "
         "python tool_add_control.py ./models/v1-5-pruned.ckpt ./models/control_sd15_ini.ckpt &&",
-        "conda run --no-capture-output -n control python tutorial_train.py"
+        "conda run --no-capture-output -n control python tutorial_train.py",
     )
 
     docker_cmd = f"docker exec -it rb-control /bin/bash -c \"{' '.join(conda_cmd)}\""
     print(docker_cmd, flush=True)
     subprocess.call(f"script -c '{docker_cmd}'", shell=True)
+
 
 if __name__ == "__main__":
     main()
