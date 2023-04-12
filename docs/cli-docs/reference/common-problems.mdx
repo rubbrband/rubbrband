@@ -1,0 +1,23 @@
+---
+title: "Common Problems"
+description: "Commons issues you may run into when using Rubbrband"
+---
+
+**`command not found: rubbrband`**
+
+If you get this error after you have already installed rubbrband, you likely need to add your python dependencies folder to your PATH variable.
+
+To solve this, use the following as reference:
+
+```
+$ which rubbrband
+/usr/local/bin/rubbrband
+
+// replace /usr/local/bin with the actual folder that holds rubbrband
+$ export PATH=/usr/local/bin:$PATH
+```
+
+
+**`Docker is not running as root. Please start Docker or run sudo su root`**
+
+If you get this error, you need to install Docker.

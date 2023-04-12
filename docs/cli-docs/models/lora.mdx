@@ -1,0 +1,50 @@
+---
+title: "LoRA"
+description: "Fast and lightweight finetuning for Dreambooth"
+---
+
+## **Training (Finetuning)**
+
+To train LoRA, add some images to a folder named `data`. The author recommends about 7-10 images for good results.
+
+```bash
+rubbrband launch lora
+
+# data folder should contain 5-10 images you want to finetune. 
+# you should use jpg or png files. 768x768 images are recommended.
+
+rubbrband train lora --dataset_dir="./data" 
+```
+
+For reference, training on an **RTX 3090** takes \~20 min for 1k steps.
+
+****
+
+## Inference
+
+After doing a training run on LoRA, run the `rubbrband eval` command.
+
+```bash
+rubbrband launch lora
+rubbrband eval lora --input-prompt "a man on the moon in style of <s1><s2>"
+```
+
+
+## Where are my outputs?
+
+To view the output image on your local machine
+
+```bash
+rubbrband copy-from lora /home/engineering/samples/output.jpg ./data
+```
+
+To copy the checkpoint safetensor file onto your local machine, run the following:
+
+```bash
+rubbrband copy-from lora /home/engineering/output/final_lora.safetensors ./data
+```
+
+
+## Sample Image Outputs
+
+![](/images/cli-docs/models/LoRa.png)

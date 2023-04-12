@@ -1,0 +1,84 @@
+---
+title: "ControlNet"
+description: "Control your DreamBooth Model"
+---
+
+## **What is ControlNet?**
+
+ControlNet is a generative model with the ability to create images conditioned on more constraints than was possible before.
+
+Previously, DreamBooth and Stable Diffusion models would be able to generate images given a text prompt. But what if you wanted a very specific image for a given prompt? For instance, for the prompt `a lighthouse in the sea` , you wanted to the lighthouse to be in the top right of the screen, with a certain height to it? 
+
+With previous image generation models, there was no way to control the outputs other than through the text prompt.
+
+With **ControlNet,** you'll be able to pass in a text prompt, and an image that you want the output to look like.
+
+For instance, for the text prompt `bird` you'll be able to pass in an outline of the bird you want, like this:
+
+
+![](/images/cli-docs/models/ControlNet1.png)
+
+
+and you should get images like this as the output:
+
+
+![](/images/cli-docs/models/ControlNet2.png)
+
+
+If you want to check out a cool usage of ControlNet: you can try it here: [https://scribblediffusion.com](https://scribblediffusion.com)
+
+****
+
+## Training with a sample dataset
+
+```bash
+rubbrband launch control
+
+# Download some sample data
+wget https://huggingface.co/lllyasviel/ControlNet/resolve/main/training/fill50k.zip
+unzip fill50k.zip
+
+rubbrband train control --dataset-dir ./fill50k
+```
+
+Checkpoints are saved to `~/ControlNet/lightning_logs/version_0/checkpoints` in the container.
+
+To access it:
+
+```bash
+rubbrband enter control
+cd ~/ControlNet/lightning_logs/version_0/checkpoints
+```
+
+****
+
+## Dataset Format
+
+In order to train **ControlNet**, the dataset folder needs to be structured in a specific way.
+
+The model creators have created a sample dataset called `fill50k` which is shown above. You can replicate that folder structure as shown here:
+
+```bash
+.
+├── prompt.json             # a json file mapping source to target, with a prompt
+├── source                  # Source files
+│   ├── 0.png               # Source Image 0
+│   ├── 1.png               # Source Image 1
+│   └── ...                 # etc.
+├── target                  # Target files
+│   ├── 0.png               # Target Image 0
+│   ├── 1.png               # Target Image 1
+│   └── ...                 # etc.
+└── ...
+```
+
+`prompt.json` is a json file that indicates to the model how source files should map to target files. 
+
+**Important: This file should include each entry as a single line and** **_it should not be properly formatted as a JSON_** **. Here are the first three lines of the sample file:**
+
+```bash
+{"source": "source/0.png", "target": "target/0.png", "prompt": "pale golden rod circle with old lace background"}
+{"source": "source/1.png", "target": "target/1.png", "prompt": "light coral circle with white background"}
+{"source": "source/2.png", "target": "target/2.png", "prompt": "aqua circle with light pink background"}
+```
+

@@ -1,0 +1,32 @@
+---
+title: "Lambda Labs(Recommended)"
+description: "Using Rubbrband on Lambda Labs"
+---
+
+Lambda Labs is the easiest way to use Rubbrband to train models. 
+
+
+## Dreambooth Finetuning
+
+Use the **1 x A10** machine to finetune Dreambooth.
+
+Once you SSH into your instance, run the following commands to install Rubbrband and start finetuning.
+
+```
+sudo su
+pip install rubbrband
+
+# download some sample data
+git clone https://github.com/rubbrband/sample_dataset.git
+git clone https://github.com/JoePenna/Stable-Diffusion-Regularization-Images.git --depth 1
+mkdir regDir
+mv ./Stable-Diffusion-Regularization-Images/man_unsplash ./regDir/man
+
+# start training
+rubbrband train dreambooth --class-word man --dataset-dir ./sample_dataset --reg-dir ./regDir --log-dir ./logs
+```
+
+
+## ControlNet Finetuning
+
+Use the **1 x A100** machine to finetune ControlNet.

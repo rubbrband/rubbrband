@@ -1,0 +1,82 @@
+{
+  "$schema": "https://mintlify.com/schema.json",
+  "name": "Rubbrband",
+  "logo": {
+    "dark": "/logo/dark.svg",
+    "light": "/logo/light.svg"
+  },
+  "favicon": "/favicon.png",
+  "colors": {
+    "primary": "#0077FF",
+    "light": "#88BCF9",
+    "dark": "#025EC3", 
+    "anchors":{"from": "#45D5D9", "to": "#006BE0"}
+  },
+  "topbarCtaButton": {
+    "name": "Get Started",
+    "url":  "https://github.com/rubbrband/rubbrband"
+  },
+  "anchors": [
+    {
+      "name": "Github",
+      "icon": "github",
+      "url": "https://github.com/rubbrband/rubbrband"
+    },
+    {
+      "name": "Blog", 
+      "icon": "pen", 
+      "url": "https://rubbrband.com/#/blog"
+    },
+    {
+      "name": "Community",
+      "icon": "discord",
+      "url": "https://discord.gg/BW3R9yK7Fh"
+    }
+  ],
+  "navigation": [
+    {
+      "group": "Getting Started",
+      "pages": [
+        "cli-docs/getting-started/quickstart-guide",
+        "cli-docs/getting-started/introduction"
+      ]
+    },
+    {
+      "group": "Models",
+      "pages": [
+        "cli-docs/models/dreambooth",
+        "cli-docs/models/stable-diffusion-web-ui",
+        "cli-docs/models/controlnet",
+        "cli-docs/models/lora"
+      ]
+    },
+    {
+      "group": "Supported Compute Platforms",
+      "pages": [
+        "cli-docs/supported-compute-platforms/tested-platforms",
+        "cli-docs/supported-compute-platforms/aws",
+        "cli-docs/supported-compute-platforms/lambda-labs-recommended"
+      ]
+    },
+    { 
+      "group": "Reference",
+      "pages": [
+        "cli-docs/reference/installation",
+        "cli-docs/reference/github",
+        "cli-docs/reference/common-problems"
+      ]
+    },
+    {  
+      "group": "Use Cases",
+      "pages": [
+        "cli-docs/use-cases/generating-specific-persons-face",
+        "cli-docs/use-cases/generate-animated-video"
+      ]
+    }
+  ],
+  "footerSocials": {
+    "github": "https://github.com/rubbrband/rubbrband",
+    "discord": "https://discord.gg/BW3R9yK7Fh"
+  }
+  
+}
