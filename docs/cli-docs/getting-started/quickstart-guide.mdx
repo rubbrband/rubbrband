@@ -1,0 +1,71 @@
+---
+title: "Quickstart Guide"
+description: "Start training in minutes."
+---
+
+## **Installation**
+
+Rubbrband can be installed through pip.
+
+```bash
+pip install rubbrband
+```
+
+## Example Usage
+
+To get a feel for finetuning Dreambooth, you can copy and paste these lines in your terminal to start finetuning. This script will finetune a Dreambooth model to learn a specific man's face. 
+
+```bash
+# install rubbrband
+pip install rubbrband
+
+# download dummy dataset and set folder structure
+git clone https://github.com/rubbrband/sample_dataset.git
+git clone https://github.com/JoePenna/Stable-Diffusion-Regularization-Images.git --depth 1
+mkdir regDir
+mv ./Stable-Diffusion-Regularization-Images/man_unsplash ./regDir/man
+
+# start training
+rubbrband train dreambooth --class-word man --dataset-dir ./sample_dataset --reg-dir ./regDir --log-dir ./logs
+```
+
+## Install Docker
+
+Rubbrband requires Docker to be installed. Installation instructions found [here](https://docs.docker.com/get-docker/).
+
+****
+
+## Supported models
+
+* **DreamBooth -** Personalize Stable Diffusion with your own images
+
+* **WebUI Stable Diffusion -** Use a web interface to train and generate outputs with Stable Diffusion models.
+
+* **ControlNet(beta) -** An image model to control diffusion models by adding extra conditions
+
+* **LoRA(beta) -** Fine-tune Stable Diffusion models twice as fast as DreamBooth, by Low-rank Adaptation.
+
+****
+
+## CLI Commands
+
+```bash
+# View running MODELS
+rubbrband ls
+```
+
+```bash
+# View all supported MODELS
+rubbrband models
+```
+
+```bash
+# Train a MODEL with a given folder containing data
+rubbrband train MODEL --data-dir=""
+```
+
+```bash
+# Start a webUI model
+rubbrband web MODEL
+```
+

@@ -1,0 +1,52 @@
+---
+title: "AWS"
+description: "Using Rubbrband on AWS"
+---
+
+The AWS EC2 instance you would want to use depends on the model you want to finetune. In this article, we'll detail what EC2 instance you should use for your specific model.
+
+
+## Dreambooth
+
+Dreambooth requires about 24GB of RAM, which means that A10s work well for this task. AWS offers A10 GPUs with their G5 instances. We recommend you use this G5 specification:
+
+### AWS EC2 G5.2xlarge
+
+* 100GB storage
+
+* Amazon Linux 2
+
+**Step 1\. Install Docker**
+
+```
+$ sudo yum update -y
+$ sudo amazon-linux-extras install docker
+$ sudo service docker start
+$ sudo usermod -a -G docker ec2-user
+```
+
+**Step 2\. Install Rubbrband**
+
+```
+$ sudo su
+$ pip install rubbrband
+```
+
+**Step 3\. Start a Sample training run**
+
+This is from our quick start guide. It'll download some sample data, and start training Dreambooth.
+
+```
+git clone https://github.com/rubbrband/sample_dataset.git
+git clone https://github.com/JoePenna/Stable-Diffusion-Regularization-Images.git --depth 1
+mkdir regDir
+mv ./Stable-Diffusion-Regularization-Images/man_unsplash ./regDir/man
+
+# start training
+rubbrband train dreambooth --class-word man --dataset-dir ./sample_dataset --reg-dir ./regDir --log-dir ./logs
+```
+
+
+## ControlNet
+
+Docs work in progress.

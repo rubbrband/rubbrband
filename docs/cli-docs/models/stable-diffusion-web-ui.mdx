@@ -1,0 +1,58 @@
+---
+title: "Stable Diffusion Web UI"
+description: "Explore stable diffusion models using a simple browser UI."
+---
+
+## What can I do with sd-webui?
+
+* The web UI allows you to import your custom models to run inference
+
+* Run batch-inference jobs with your models
+
+* Run txt2img and img2img models using the UI
+
+* Use your ControlNet models on the UI
+
+* View all your outputs and change inference parameters accordingly.
+
+These are just a few of the most interesting features of sd-webui. For a full list, check out this url: [https://github.com/AUTOMATIC1111/stable-diffusion-webui](https://github.com/AUTOMATIC1111/stable-diffusion-webui).
+
+
+## How does sd-webui work?
+
+* sd-webui requires a model for all of its features. We pre-populate a model for you.
+
+* Depending on the task at hand, the outputs of sd-webui are different. For instance, txt2img is selected below.  
+![](/images/cli-docs/models/screenshot.png)  
+
+* Txt2imge will require a text prompt and will use your model to generate an image.
+
+* img2img will take in a text prompt along with an image and generate a new image incorporating your text prompt.
+
+* There are various user-configured parameters on the UI that users can play and modify for improvements on outputs.
+
+
+## How to start the web UI
+
+```bash
+rubbrband web sd-webui
+```
+
+
+## How to import custom models
+
+To import a custom model that is stored at /path/to/mymodel.ckpt, copy the model into the container:
+
+```bash
+# If the model is a Stable Diffusion model
+rubbrband copy-to sd-webui /path/to/mymodel.ckpt /home/engineering/stable-diffusion-webui/models/Stable-diffusion
+```
+
+```bash
+# If the model is a ControlNet model
+rubbrband copy-to sd-webui /path/to/mymodel.ckpt /home/engineering/stable-diffusion-webui/models/ControlNet
+```
+
+Remeber to click on the refresh button and select the copied model in the dropdown menu.
+
+![](/images/cli-docs/models/sd-webui-refresh.png)

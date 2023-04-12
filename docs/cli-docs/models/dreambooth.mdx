@@ -1,0 +1,92 @@
+---
+title: "Dreambooth"
+description: "Personalize Stable Diffusion with your own images"
+---
+
+<Frame caption = "Dreambooth trained on 5 images of a dog ">
+![](/images/cli-docs/models/dreambooth_dog.jpg)
+</Frame>
+
+[source](https://dreambooth.github.io)
+
+## What is Dreambooth?
+
+* Dreambooth is a method of personalizing text-to-image models, such as Stable Diffusion.
+
+* Dreambooth personalizes Stable Diffusion by fine tuning on a small set of reference images (around 3-5 images) that you provide.
+
+* Current models such as Stable Diffusion produce high-quality images, but it struggles to make new versions of your data in different settings or poses.
+
+
+## How Does Dreambooth Work?
+
+* During fine-tuning, Dreambooth learns to recognize unique features of your data.
+
+* The model associates an identifier (called `sks`) to your unique features.
+
+* The `sks` identifier allows the model to embed your unique features into the output domain of the model.
+
+* The `sks` identifier will be used to synthesize photorealistic images of your features in different scenes or poses.
+
+* The `sks` identifier was chosen randomly, because it is a rare word in the English dictionary.
+
+
+## Training with a sample dataset
+
+<Frame caption = "Training data of five dog photos" >
+![](/images/cli-docs/models/dreambooth-training-data.jpeg)
+</Frame>
+
+
+* Please download the images of the dog [found here](https://drive.google.com/drive/folders/1BO%5Fdyz-p65qhBRRMRA4TbZ8qW4rB99JZ) to the `--dataset-dir` folder.
+
+* `--class-word` describes what images in your dataset contain (in this example, the dataset contains dog photos).
+
+* `--regularization-prompt` describes the type of images you want to generate.
+
+* Make a directory with `mkdir logs` and pass in the directory as `--log-dir` to get logs in that directory.
+
+* We set sensible defaults for the steps, batch size, and learning rate. Refer to [How do I change default settings?](/cli-docs/models/dreambooth#how-do-i-change-default-settings) for more information.
+
+```bash
+rubbrband train dreambooth --dataset-dir="./data" \
+--class-word="dog" \
+--regularization-prompt="a photo of a dog"
+--log-dir logs
+```
+
+
+## Inference on sample prompts
+
+<Frame caption = "Output of the prompt 'sks dog on the beach' "> 
+![](/images/cli-docs/models/sks-dog-on-the-beach-0010.jpg)
+</Frame> 
+
+* After doing a training run on Dreambooth, run the `rubbrband eval` command.
+
+* In the `--input-prompt`, make sure the `class-word` (e.g. dog) is in the prompt.
+
+* In the `--input-prompt`, make sure the `sks` identifier is in the prompt.  
+   * For more information on what `sks` means, refer to [How Does Dreambooth Work?](/cli-docs/models/dreambooth#how-does-dreambooth-work)
+
+```bash
+rubbrband eval dreambooth --input-prompt "sks dog on the beach"
+```
+
+
+## Where are my outputs?
+
+* To save the output image on your local machine
+
+```bash
+rubbrband copy-from dreambooth /home/engineering/samples/ ./data
+```
+
+* The checkpoint file is already on your local machine inside the `--log-dir`
+
+## How do I change default settings?
+
+* Dreambooth fine tuning is very sensitive and may require changing the default settings to get good outputs.
+
+* This [blog post](https://huggingface.co/blog/dreambooth) covers some of the settings that have been found to work well.
+

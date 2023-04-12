@@ -1,0 +1,46 @@
+---
+title: "Introduction"
+description: "The easiest way to train open-source ML models"
+---
+
+## **What is Rubbrband?**
+
+Rubbrband is an easy-to-use Python library for training Machine Learning models.
+
+
+## Features
+
+* Train the latest open-source models from a single command
+
+* Automatic environment setup specific to each ML model. Correct CUDA, Python, and C-Library versions are all automatically installed and containerized.
+
+* A unified interface for training models
+
+
+## **What's unique about Rubbrband?** 
+
+We created Rubbrband because we found it hard to train Open-Source ML models on our own datasets. Much of the time was spent figuring out dependencies, writing custom data loaders, and finding where the entry point for the ML was.
+
+To simplify this process, we wanted to build a unified API that abstracts dependencies and model code. By doing this, developers will be able to experiment with many different models on their dataset, without having to manually set up each model.
+
+
+## How does it work?
+
+* Rubbrband automatically dockerizes each Machine Learning repo with the proper CUDA and application dependencies.
+
+* The various Rubbrband commands like **train** and **enter** are then run inside that container implicitly.
+
+
+## What models do you support?
+
+We currently support the following models:
+
+* [ControlNet](https://github.com/lllyasviel/controlnet)
+
+* [DreamBooth](https://github.com/XavierXiao/Dreambooth-Stable-Diffusion)
+
+* [LoRA](https://github.com/cloneofsimo/lora)
+
+* [Stable Diffusion Web UI](https://github.com/AUTOMATIC1111/stable-diffusion-webui)
+
+We plan on releasing a feature that accepts **any GitHub repo** and sets up a training environment.
