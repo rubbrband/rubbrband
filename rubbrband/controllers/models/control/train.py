@@ -68,6 +68,7 @@ def main(**kwargs):
         )
 
     conda_cmd = (
+        "conda run --no-capture-output -n control sudo chmod 777 ./ && "
         "conda run --no-capture-output -n control sudo chmod 777 ./* && "
         "conda run --no-capture-output -n control "
         "python tool_add_control.py ./models/v1-5-pruned.ckpt ./models/control_sd15_ini.ckpt &&",
