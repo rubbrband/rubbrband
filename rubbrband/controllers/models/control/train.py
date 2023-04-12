@@ -26,24 +26,59 @@ def main(**kwargs):
             + "Please refer to the documentation for more information."
         )
         sys.exit(1)
+    if "rb-control" in subprocess.check_output(["docker", "ps", "-a"]).decode("utf-8"):
+        subprocess.call(["docker", "stop", "rb-control"])
+        subprocess.call(["docker", "rm", "rb-control"])
 
-    if "rb-control" in subprocess.check_output('docker ps -a --format "{{.Names}}"').decode("utf-8"):
-        subprocess.call("docker stop rb-control")
-        subprocess.call("docker rm rb-control")
-
-    volumes = (
-        f"-v {os.path.join(script_dir, 'v1-5-pruned.ckpt')}:/home/engineering/ControlNet/models/v1-5-pruned.ckpt "
-        f"-v {os.path.abspath(kwargs['dataset_dir'])}:/home/engineering/ControlNet/training/fill50k"
-    )
-    subprocess.call(f"docker run --name rb-control {gpu_arg} -it -d {volumes} -d rubbrband/control:latest")
+    if gpu_arg:
+        subprocess.call(
+            [
+                "docker",
+                "run",
+                "--name",
+                "rb-control",
+                "--gpus",
+                "all",
+                "-it",
+                "-d",
+                "-v",
+                os.path.join(script_dir, "v1-5-pruned.ckpt") + ":/home/engineering/ControlNet/models/v1-5-pruned.ckpt",
+                "-v",
+                os.path.abspath(kwargs["dataset_dir"]) + ":/home/engineering/ControlNet/training/fill50k",
+                "-d",
+                "rubbrband/control:latest",
+            ]
+        )
+    else:
+        subprocess.call(
+            [
+                "docker",
+                "run",
+                "--name",
+                "rb-control",
+                "-it",
+                "-d",
+                "-v",
+                os.path.join(script_dir, "v1-5-pruned.ckpt") + ":/home/engineering/ControlNet/models/v1-5-pruned.ckpt",
+                "-v",
+                os.path.abspath(kwargs["dataset_dir"]) + ":/home/engineering/ControlNet/training/fill50k",
+                "-d",
+                "rubbrband/control:latest",
+            ]
+        )
 
     conda_cmd = (
-        "conda run --no-capture-output -n control"
-        "python tool_add_control.py ./models/v1-5-pruned.ckpt ./models/control_sd15_ini.ckpt &&"
-        "conda run --no-capture-output -n control python tutorial_train.py"
+        "conda run --no-capture-output -n control sudo chmod 777 ./ && "
+        "conda run --no-capture-output -n control sudo chmod 777 ./* && "
+        "conda run --no-capture-output -n control "
+        "python tool_add_control.py ./models/v1-5-pruned.ckpt ./models/control_sd15_ini.ckpt &&",
+        "conda run --no-capture-output -n control sudo chmod 777 ./* && "
+        "conda run --no-capture-output -n control python tutorial_train.py",
     )
 
-    subprocess.call(f"docker exec -it rb-control /bin/bash -c '{' '.join(conda_cmd)}'", shell=True)
+    docker_cmd = f"docker exec -it rb-control /bin/bash -c \"{' '.join(conda_cmd)}\""
+    print(docker_cmd, flush=True)
+    subprocess.call(f"script -c '{docker_cmd}'", shell=True)
 
 
 if __name__ == "__main__":
