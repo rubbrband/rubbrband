@@ -5,7 +5,7 @@ import sys
 import requests
 
 
-def main(dreambooth_checkpoint: str = None):
+def main(dreambooth_checkpoint: str = None, control_preprocessor: str = None):
     """Run the webui script."""
 
     script_dir = os.path.dirname(os.path.realpath(__file__))
@@ -35,13 +35,50 @@ def main(dreambooth_checkpoint: str = None):
             "-it",
             "-d",
             "-v",
-            ckpt_path + ":/home/engineering/stable-diffusion-webui/models/Stable-diffusion/v1-5-pruned-emaonly.ckpt",
+            ckpt_path
+            + ":/home/engineering/stable-diffusion-webui/"
+            + "models/Stable-diffusion/v1-5-pruned-emaonly.ckpt",
             "-d",
             "rubbrband/sd-webui:latest",
         ]
     )
 
-    if dreambooth_checkpoint:
+    if dreambooth_checkpoint and control_preprocessor:
+        # get the last part of the path that is the file name
+        dreambooth_checkpoint_name = dreambooth_checkpoint.split("/")[-1]
+        control_preprocessor_name = control_preprocessor.split("/")[-1]
+        subprocess.run(
+            [
+                "docker",
+                "exec",
+                "-it",
+                "rb-sd-webui",
+                "/bin/bash",
+                "-c",
+                "git clone --depth 1 https://github.com/Mikubill/sd-webui-controlnet.git "
+                + "/home/engineering/stable-diffusion-webui/extensions",
+            ]
+        )
+        subprocess.run(
+            [
+                "docker",
+                "cp",
+                dreambooth_checkpoint,
+                "rb-sd-webui:/home/engineering/stable-diffusion-webui/"
+                + f"models/Stable-diffusion/{dreambooth_checkpoint_name}",
+            ]
+        )
+        subprocess.run(
+            [
+                "docker",
+                "cp",
+                control_preprocessor,
+                "rb-sd-webui:/home/engineering/stable-diffusion-webui/"
+                + f"models/Stable-diffusion/{control_preprocessor_name}",
+            ]
+        )
+
+    elif dreambooth_checkpoint:
         subprocess.run(
             [
                 "docker",
