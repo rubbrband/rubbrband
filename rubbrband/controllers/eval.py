@@ -42,19 +42,11 @@ def lora(
     eval(ctx, "lora")
 
 
-def control_callback(annotator_type: str):
-    """Callback for the control command."""
-    valid_annotators = ["canny", "depth", "hed", "mlsd", "normal", "openpose", "scribble", "seg"]
-
-    if annotator_type not in valid_annotators:
-        typer.echo(f"Invalid annotator type. Valid types are: {', '.join(valid_annotators)}")
-        return
 
 
 @app.command(rich_help_panel="Models :robot:", help="Low-rank adaptation for efficient stable diffusion fine-tuning")
 def control(
     ctx: typer.Context,
-    annotator_type: str = typer.Option(..., callback=control_callback, help="The edge detector to use."),
 ):
     eval(ctx, "control")
 

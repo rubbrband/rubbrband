@@ -5,7 +5,7 @@ import sys
 import requests
 
 
-def main(dreambooth_checkpoint: str = None, control_preprocessor: str = None):
+def main(dreambooth_checkpoint: str = None, control_processor: str = None):
     """Run the webui script."""
 
     script_dir = os.path.dirname(os.path.realpath(__file__))
@@ -43,10 +43,9 @@ def main(dreambooth_checkpoint: str = None, control_preprocessor: str = None):
         ]
     )
 
-    if dreambooth_checkpoint and control_preprocessor:
+    if control_processor:
         # get the last part of the path that is the file name
-        dreambooth_checkpoint_name = dreambooth_checkpoint.split("/")[-1]
-        control_preprocessor_name = control_preprocessor.split("/")[-1]
+        control_processor_name = control_processor.split("/")[-1]
         subprocess.run(
             [
                 "docker",
@@ -56,29 +55,32 @@ def main(dreambooth_checkpoint: str = None, control_preprocessor: str = None):
                 "/bin/bash",
                 "-c",
                 "git clone --depth 1 https://github.com/Mikubill/sd-webui-controlnet.git "
-                + "/home/engineering/stable-diffusion-webui/extensions",
+                + "/home/engineering/stable-diffusion-webui/extensions/sd-webui-controlnet",
             ]
         )
         subprocess.run(
             [
-                "docker",
-                "cp",
-                dreambooth_checkpoint,
-                "rb-sd-webui:/home/engineering/stable-diffusion-webui/"
-                + f"models/Stable-diffusion/{dreambooth_checkpoint_name}",
-            ]
-        )
-        subprocess.run(
-            [
-                "docker",
-                "cp",
-                control_preprocessor,
-                "rb-sd-webui:/home/engineering/stable-diffusion-webui/"
-                + f"models/Stable-diffusion/{control_preprocessor_name}",
+             	"docker",
+                "exec",
+                "-it",
+                "rb-sd-webui",
+                "/bin/bash",
+                "-c",
+                "mkdir /home/engineering/stable-diffusion-webui/models/ControlNet"
             ]
         )
 
-    elif dreambooth_checkpoint:
+        subprocess.run(
+            [
+                "docker",
+                "cp",
+                control_processor,
+                "rb-sd-webui:/home/engineering/stable-diffusion-webui/"
+                + f"models/ControlNet/{control_processor_name}",
+            ]
+        )
+
+    if dreambooth_checkpoint:
         subprocess.run(
             [
                 "docker",

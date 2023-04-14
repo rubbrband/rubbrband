@@ -12,29 +12,19 @@ def main(**kwargs):
     script_dir = os.path.dirname(os.path.abspath(__file__))
     ckpt = ""
     max_step = 0
-    for file in os.listdir("{script_dir}", "lightning_logs", "version_0", "checkpoints"):
+    for file in os.listdir(f"{os.getcwd()}/lightning_logs/version_0/checkpoints"):
         if file.endswith(".ckpt"):
-            step = int(file.split("-")[1].split(".")[0])
+            step = int(file.split("-")[1].split(".")[0].split("=")[1])
             if step > max_step:
                 max_step = step
-                ckpt = file
-    pth_name = f"control_sd15_{kwargs['annotator_type']}.pth"
-
-    if not os.path.isfile(os.path.join(script_dir, pth_name)):
-        url = f"https://huggingface.co/lllyasviel/ControlNet/resolve/main/models/{pth_name}"
-        response = requests.get(url)
-        with open(os.path.join(script_dir, pth_name), "wb") as f:
-            f.write(response.content)
-
+                ckpt = f"{os.getcwd()}/lightning_logs/version_0/checkpoints/" + file
     subprocess.call(
         [
             "rubbrband",
             "web",
             "sd-webui",
-            "--dreambooth-checkpoint",
-            ckpt,
-            "--control-preprocessor",
-            os.path.join(script_dir, pth_name),
+            "--control-processor",
+            ckpt
         ]
     )
 
