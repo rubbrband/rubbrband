@@ -29,7 +29,7 @@ def main(**kwargs):
     if "rb-control" in subprocess.check_output(["docker", "ps", "-a"]).decode("utf-8"):
         subprocess.call(["docker", "stop", "rb-control"])
         subprocess.call(["docker", "rm", "rb-control"])
-    subprocess.call(["mkdir", "logs"])
+    subprocess.call(["mkdir", "lightning_logs"])
 
     if gpu_arg:
         subprocess.call(
