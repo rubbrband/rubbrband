@@ -42,8 +42,6 @@ def lora(
     eval(ctx, "lora")
 
 
-
-
 @app.command(rich_help_panel="Models :robot:", help="Low-rank adaptation for efficient stable diffusion fine-tuning")
 def control(
     ctx: typer.Context,

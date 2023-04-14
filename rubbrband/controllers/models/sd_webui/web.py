@@ -60,13 +60,13 @@ def main(dreambooth_checkpoint: str = None, control_processor: str = None):
         )
         subprocess.run(
             [
-             	"docker",
+                "docker",
                 "exec",
                 "-it",
                 "rb-sd-webui",
                 "/bin/bash",
                 "-c",
-                "mkdir /home/engineering/stable-diffusion-webui/models/ControlNet"
+                "mkdir /home/engineering/stable-diffusion-webui/models/ControlNet",
             ]
         )
 
@@ -75,8 +75,7 @@ def main(dreambooth_checkpoint: str = None, control_processor: str = None):
                 "docker",
                 "cp",
                 control_processor,
-                "rb-sd-webui:/home/engineering/stable-diffusion-webui/"
-                + f"models/ControlNet/{control_processor_name}",
+                "rb-sd-webui:/home/engineering/stable-diffusion-webui/" + f"models/ControlNet/{control_processor_name}",
             ]
         )
 

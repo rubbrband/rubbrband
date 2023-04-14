@@ -65,4 +65,3 @@ def web(ctx: typer.Context, model: str, dreambooth_checkpoint: str, control_proc
 
 if __name__ == "__main__":
     app()
-
