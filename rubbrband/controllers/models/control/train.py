@@ -29,6 +29,7 @@ def main(**kwargs):
     if "rb-control" in subprocess.check_output(["docker", "ps", "-a"]).decode("utf-8"):
         subprocess.call(["docker", "stop", "rb-control"])
         subprocess.call(["docker", "rm", "rb-control"])
+    subprocess.call(["mkdir", "lightning_logs"])
 
     if gpu_arg:
         subprocess.call(
@@ -45,6 +46,8 @@ def main(**kwargs):
                 os.path.join(script_dir, "v1-5-pruned.ckpt") + ":/home/engineering/ControlNet/models/v1-5-pruned.ckpt",
                 "-v",
                 os.path.abspath(kwargs["dataset_dir"]) + ":/home/engineering/ControlNet/training/fill50k",
+                "-v",
+                os.path.abspath("lightning_logs") + ":/home/engineering/ControlNet/lightning_logs",
                 "-d",
                 "rubbrband/control:latest",
             ]

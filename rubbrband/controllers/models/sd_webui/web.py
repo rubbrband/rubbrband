@@ -5,7 +5,7 @@ import sys
 import requests
 
 
-def main(dreambooth_checkpoint: str = None):
+def main(dreambooth_checkpoint: str = None, control_processor: str = None):
     """Run the webui script."""
 
     script_dir = os.path.dirname(os.path.realpath(__file__))
@@ -35,11 +35,49 @@ def main(dreambooth_checkpoint: str = None):
             "-it",
             "-d",
             "-v",
-            ckpt_path + ":/home/engineering/stable-diffusion-webui/models/Stable-diffusion/v1-5-pruned-emaonly.ckpt",
+            ckpt_path
+            + ":/home/engineering/stable-diffusion-webui/"
+            + "models/Stable-diffusion/v1-5-pruned-emaonly.ckpt",
             "-d",
             "rubbrband/sd-webui:latest",
         ]
     )
+
+    if control_processor:
+        # get the last part of the path that is the file name
+        control_processor_name = control_processor.split("/")[-1]
+        subprocess.run(
+            [
+                "docker",
+                "exec",
+                "-it",
+                "rb-sd-webui",
+                "/bin/bash",
+                "-c",
+                "git clone --depth 1 https://github.com/Mikubill/sd-webui-controlnet.git "
+                + "/home/engineering/stable-diffusion-webui/extensions/sd-webui-controlnet",
+            ]
+        )
+        subprocess.run(
+            [
+                "docker",
+                "exec",
+                "-it",
+                "rb-sd-webui",
+                "/bin/bash",
+                "-c",
+                "mkdir /home/engineering/stable-diffusion-webui/models/ControlNet",
+            ]
+        )
+
+        subprocess.run(
+            [
+                "docker",
+                "cp",
+                control_processor,
+                "rb-sd-webui:/home/engineering/stable-diffusion-webui/" + f"models/ControlNet/{control_processor_name}",
+            ]
+        )
 
     if dreambooth_checkpoint:
         subprocess.run(

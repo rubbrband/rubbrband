@@ -22,14 +22,15 @@ def main():
 def sd_webui(
     ctx: typer.Context,
     dreambooth_checkpoint: str = typer.Option(help="Optional path to a dreambooth checkpoint.", default=None),
+    control_processor: str = typer.Option(help="Optional path to a controlnet preprocessor.", default=None),
 ):
-    web(ctx, "sd-webui", dreambooth_checkpoint)
+    web(ctx, "sd-webui", dreambooth_checkpoint, control_processor)
 
 
-def handle_model_web(params: dict, model: str, dreambooth_checkpoint: str):
+def handle_model_web(params: dict, model: str, dreambooth_checkpoint: str, control_processor: str):
     """Handle which model to run."""
     if model == "sd-webui":
-        web_sd_webui(dreambooth_checkpoint)
+        web_sd_webui(dreambooth_checkpoint, control_processor)
     else:
         typer.echo(f"Model {model} not found")
 
@@ -37,7 +38,7 @@ def handle_model_web(params: dict, model: str, dreambooth_checkpoint: str):
 # '''name''' corresponds to the name column in db.csv
 # the option '''-d''' or '''--dataset_dir''' is the path to the dataset directory
 # this directory gets mounted to the container at /home/engineering/data
-def web(ctx: typer.Context, model: str, dreambooth_checkpoint: str):
+def web(ctx: typer.Context, model: str, dreambooth_checkpoint: str, control_processor: str):
     """Entrypoint for training a model."""
     if model not in db:
         typer.echo("Model not found")
@@ -59,7 +60,7 @@ def web(ctx: typer.Context, model: str, dreambooth_checkpoint: str):
     except docker.errors.NotFound:
         pass
 
-    handle_model_web(ctx.params, model, dreambooth_checkpoint)
+    handle_model_web(ctx.params, model, dreambooth_checkpoint, control_processor)
 
 
 if __name__ == "__main__":
