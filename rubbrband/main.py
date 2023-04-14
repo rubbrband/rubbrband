@@ -200,7 +200,8 @@ def enter(model: str):
         try:
             container = client.containers.get(container_name)
         except docker.errors.NotFound:
-            client.containers.run(container_name, detach=True, name=container_name, tty=True, stdin_open=True)
+            typer.echo("Model not found. Run rubbrband ls to view running models.")
+            return
 
         container = client.containers.get(container_name)
 
