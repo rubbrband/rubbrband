@@ -47,7 +47,7 @@ def main(**kwargs):
                 "-v",
                 os.path.abspath(kwargs["dataset_dir"]) + ":/home/engineering/ControlNet/training/fill50k",
                 "-v",
-                os.path.abspath("logs") + ":/home/engineering/ControlNet/lightning_logs",
+                os.path.abspath("lightning_logs") + ":/home/engineering/ControlNet/lightning_logs",
                 "-d",
                 "rubbrband/control:latest",
             ]
