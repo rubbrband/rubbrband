@@ -97,7 +97,7 @@ def main(dreambooth_checkpoint: str = None, control_processor: str = None):
             "rb-sd-webui",
             "/bin/bash",
             "-c",
-            "bash webui.sh --api --xformers --share --enable-insecure-extension-access",
+            "python launch.py --api --xformers --share --enable-insecure-extension-access",
         ]
     )
 

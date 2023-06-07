@@ -8,16 +8,16 @@ ARG PIP_DISABLE_PIP_VERSION_CHECK=1
 ARG PIP_NO_CACHE_DIR=1
 
 RUN (pip install gradio==3.16.2 || echo pip install failed)
+RUN (pip install torch==1.13.1+cu117 torchvision==0.14.1+cu117 --extra-index-url https://download.pytorch.org/whl/cu117 || echo pip install failed)
 RUN (pip install realesrgan || echo pip install failed)
-RUN (pip install clip || echo pip install failed) \ 
+RUN (pip install clip || echo pip install failed) \
+&& (pip install open_clip_torch || echo pip install failed) \
 && (pip install scikit-image>=0.19 || echo pip install failed) 
 RUN (pip install torchsde || echo pip install failed) \ 
 && (pip install font-roboto || echo pip install failed) \ 
 && (pip install facexlib || echo pip install failed) \ 
-&& (pip install fastapi || echo pip install failed) \ 
-&& (pip install torchvision || echo pip install failed) 
-RUN (pip install torch || echo pip install failed) \ 
-&& (pip install facelib || echo pip install failed) \ 
+&& (pip install fastapi || echo pip install failed)
+RUN (pip install facelib || echo pip install failed) \ 
 && (pip install omegaconf || echo pip install failed) \ 
 && (pip install blendmodes || echo pip install failed) \ 
 && (pip install accelerate || echo pip install failed) 
@@ -27,7 +27,7 @@ RUN (pip install jsonmerge || echo pip install failed) \
 && (pip install Pillow || echo pip install failed) \ 
 && (pip install starlette || echo pip install failed) 
 RUN (pip install GitPython || echo pip install failed) \ 
-&& (pip install xformers || echo pip install failed) \ 
+&& (pip install xformers==0.0.16rc425 || echo pip install failed) \ 
 && (pip install numpy || echo pip install failed) \ 
 && (pip install resize-right || echo pip install failed) \ 
 && (pip install einops || echo pip install failed) 
@@ -38,7 +38,6 @@ RUN (pip install pytorch_lightning==1.7.7 || echo pip install failed) \
 && (pip install typing_extensions || echo pip install failed) 
 RUN (pip install timm==0.4.12 || echo pip install failed) \ 
 && (pip install filelock || echo pip install failed) \ 
-&& (pip install ldm || echo pip install failed) \ 
 && (pip install tqdm || echo pip install failed) \ 
 && (pip install gfpgan || echo pip install failed) 
 RUN (pip install basicsr || echo pip install failed) \ 
@@ -54,9 +53,8 @@ RUN (pip install pytz || echo pip install failed) \
 && (pip install pyngrok || echo pip install failed) \ 
 && (pip install lark || echo pip install failed) \ 
 && (pip install packaging || echo pip install failed) \ 
-&& (pip install piexif || echo pip install failed) 
-
-USER engineering
+&& (pip install piexif || echo pip install failed) \
+&& (pip install gdown || echo pip install failed)
 
 WORKDIR /home/engineering
 
