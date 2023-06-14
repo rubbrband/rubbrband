@@ -63,5 +63,5 @@ jobs:
 
     - name: Test package
       run: |
-        rubbrband
+        python -c "import rubbrband"
       if: ${{ success() }}
