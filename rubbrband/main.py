@@ -50,9 +50,12 @@ def upload(image, prompt, metadata={}):
     response = response["url"]
 
     files = {"file": (name, image)}
-    http_response = requests.post(response["url"], data=response["fields"], files=files)
+    requests.post(response["url"], data=response["fields"], files=files)
 
-    if http_response.status_code == 204:
-        print(f"Successfully uploaded {name}")
-    else:
-        print(f"Upload failed: {http_response.text}")
+    image_url = f"https://rubbrband-image-bucket.s3.amazonaws.com/{api_key}/{name}"
+    requests.post(
+        f"https://block.rubbrband.com/process_img?api_key={api_key}&image_url={image_url}",
+        json={"metadata": metadata},
+    )
+
+    return True
