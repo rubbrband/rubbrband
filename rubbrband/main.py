@@ -52,10 +52,4 @@ def upload(image, prompt, metadata={}):
     files = {"file": (name, image)}
     requests.post(response["url"], data=response["fields"], files=files)
 
-    image_url = f"https://rubbrband-image-bucket.s3.amazonaws.com/{api_key}/{name}"
-    requests.post(
-        f"https://block.rubbrband.com/process_img?api_key={api_key}&image_url={image_url}",
-        json={"metadata": metadata},
-    )
-
     return True
