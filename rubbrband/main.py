@@ -1,9 +1,9 @@
 import io
+import os
 import re
 
-import PIL
-import PIL.PngImagePlugin
 import requests
+from PIL import Image
 
 api_key = None
 
@@ -33,14 +33,25 @@ def upload(image, prompt, metadata={}):
         print("Provide an API key in the init function")
         return False
 
+    # Handle image input
     if type(image) == str and is_url(image):
+        # If image is a url, download it
         image_url_response = requests.get(image)
         if image_url_response.status_code != 200 or image_url_response.content is None:
             return False
         image = image_url_response.content
-
-    if type(image) == PIL.PngImagePlugin.PngImageFile:
+    elif isinstance(image, Image.Image):
+        # If image is a PIL, convert it to bytes
         image = image_to_byte_array(image)
+    elif type(image) == str and os.path.isfile(image):
+        # If image is a file path, read it
+        with open(image, "rb") as f:
+            image = f.read()
+    elif type(image) == bytes:
+        pass
+    else:
+        print("Invalid image type")
+        return False
 
     metadata["prompt"] = prompt
 
