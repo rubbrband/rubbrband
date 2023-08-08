@@ -1,6 +1,7 @@
 import io
 import os
 import re
+import time
 
 import requests
 from PIL import Image
@@ -74,4 +75,30 @@ def upload(image, prompt, metadata={}):
     files = {"file": (filename, image)}
     requests.post(response["url"], data=response["fields"], files=files)
 
-    return True
+    return filename
+
+
+def get_image_metadata(filename, retries=8):
+    if api_key is None:
+        print("Provide an API key in the init function")
+        return False
+
+    for i in range(retries):
+        response = requests.get(
+            "https://block.rubbrband.com/get_image_metadata?api_key=" + api_key + "&filename=" + filename
+        )
+        if response is None:
+            return False
+
+        if response.status_code != 200:
+            print(response.text)
+
+        response = response.json()
+        data = response.get("data", None)
+        if data is not None and "comp_score" in data:
+            return data
+        print(f"{retries - i} retries left")
+        time.sleep(1)
+
+    print("Failed to get image metadata. Try again later.")
+    return False
