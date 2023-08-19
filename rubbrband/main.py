@@ -95,7 +95,7 @@ def get_image_metadata(filename, retries=8):
 
         response = response.json()
         data = response.get("data", None)
-        if data is not None and "comp_score" in data:
+        if data is not None and "composition_score" in data:
             return data
         print(f"{retries - i} retries left")
         time.sleep(1)
