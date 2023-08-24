@@ -10,55 +10,69 @@ api_key = None
 
 
 def init(apikey):
+    """Initialize the Rubbrband API key"""
     global api_key
     api_key = apikey
 
 
-def image_to_byte_array(image):
-    # BytesIO is a file-like buffer stored in memory
-    imgByteArr = io.BytesIO()
-    # image.save expects a file-like as a argument
-    image.save(imgByteArr, format=image.format)
-    # Turn the BytesIO object back into a bytes object
-    imgByteArr = imgByteArr.getvalue()
-    return imgByteArr
+def image_to_jpg_byte_array(image):
+    """Convert an image to a JPEG byte array"""
+    assert isinstance(image, (Image.Image, bytes)), "Image must be a PIL image or a byte array"
+
+    if isinstance(image, Image.Image):
+        # Convert PIL image to JPEG byte array
+        image = image.convert("RGB")
+        jpg_byte_arr = io.BytesIO()
+        image.save(jpg_byte_arr, format="JPEG")
+        jpg_byte_arr = jpg_byte_arr.getvalue()
+    elif isinstance(image, bytes) and image.startswith(b"\xff\xd8"):
+        # The byte array already contains a JPEG header
+        jpg_byte_arr = image
+    else:
+        # Convert other image types to JPEG byte array
+        image = Image.open(io.BytesIO(image))
+        image = image.convert("RGB")
+        jpg_byte_arr = io.BytesIO()
+        image.save(jpg_byte_arr, format="JPEG")
+        jpg_byte_arr = jpg_byte_arr.getvalue()
+
+    return jpg_byte_arr
 
 
 def is_url(string):
+    """Check if a string is a valid URL"""
     regex_pattern = r"^(https?|ftp):\/\/([^\s/$.?#].[^\s]*)$"
     return bool(re.match(regex_pattern, string))
 
 
 def upload(image, prompt, metadata={}):
+    """Upload an image to the Rubbrband API"""
     if api_key is None:
         print("Provide an API key in the init function")
         return False
 
     # Handle image input
-    if type(image) == str and is_url(image):
+    if isinstance(image, str) and is_url(image):
         # If image is a url, download it
-        image_url_response = requests.get(image)
+        image_url_response = requests.get(image, timeout=5)
         if image_url_response.status_code != 200 or image_url_response.content is None:
             return False
         image = image_url_response.content
-    elif isinstance(image, Image.Image):
-        # If image is a PIL, convert it to bytes
-        image = image_to_byte_array(image)
-    elif type(image) == str and os.path.isfile(image):
+    elif isinstance(image, str) and os.path.isfile(image):
         # If image is a file path, read it
-        with open(image, "rb") as f:
-            image = f.read()
-    elif type(image) == bytes:
+        with open(image, "rb") as file:
+            image = file.read()
+    elif isinstance(image, (Image.Image, bytes)):
         pass
     else:
         print("Invalid image type")
         return False
 
+    image = image_to_jpg_byte_array(image)
     metadata["prompt"] = prompt
 
     response = requests.post(
-        "https://block.rubbrband.com/upload_img?api_key=" + api_key,
-        json={"metadata": metadata},
+        f"https://block.rubbrband.com/upload_img?api_key={api_key}", json={"metadata": metadata}, timeout=5
     )
 
     if response is None:
@@ -73,19 +87,20 @@ def upload(image, prompt, metadata={}):
     response = response["url"]
 
     files = {"file": (filename, image)}
-    requests.post(response["url"], data=response["fields"], files=files)
+    requests.post(response["url"], data=response["fields"], files=files, timeout=5)
 
     return filename
 
 
 def get_image_metadata(filename, retries=8):
+    """Get the metadata of an image"""
     if api_key is None:
         print("Provide an API key in the init function")
         return False
 
     for i in range(retries):
         response = requests.get(
-            "https://block.rubbrband.com/get_image_metadata?api_key=" + api_key + "&filename=" + filename
+            f"https://block.rubbrband.com/get_image_metadata?api_key={api_key}&filename={filename}", timeout=5
         )
         if response is None:
             return False
