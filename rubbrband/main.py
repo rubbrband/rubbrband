@@ -72,7 +72,9 @@ def upload(image, prompt, metadata={}):
     metadata["prompt"] = prompt
 
     response = requests.post(
-        f"https://block.rubbrband.com/upload_img?api_key={api_key}", json={"metadata": metadata}, timeout=5
+        f"https://block.rubbrband.com/upload_img?api_key={api_key}",
+        json={"metadata": metadata},
+        timeout=5,
     )
 
     if response is None:
@@ -100,7 +102,8 @@ def get_image_metadata(filename, retries=8):
 
     for i in range(retries):
         response = requests.get(
-            f"https://block.rubbrband.com/get_image_metadata?api_key={api_key}&filename={filename}", timeout=5
+            f"https://block.rubbrband.com/get_image_metadata?api_key={api_key}&filename={filename}",
+            timeout=5,
         )
         if response is None:
             return False
@@ -117,3 +120,28 @@ def get_image_metadata(filename, retries=8):
 
     print("Failed to get image metadata. Try again later.")
     return False
+
+
+def vote_image(filename, vote):
+    """Vote on an image"""
+    if api_key is None:
+        print("Provide an API key in the init function")
+        return False
+
+    if vote not in [0, 1]:
+        print("Invalid vote. Please vote 0 or 1, 0 being bad, 1 being good.")
+        return False
+
+    response = requests.post(
+        f"https://block.rubbrband.com/vote?api_key={api_key}",
+        json={"filename": filename, "api_key": api_key, "vote": vote},
+        timeout=5,
+    )
+
+    if response is None:
+        return False
+
+    if response.status_code != 200:
+        print(response.text)
+
+    return True
