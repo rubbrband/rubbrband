@@ -122,7 +122,7 @@ def get_image_metadata(filename, retries=8):
     return False
 
 
-def vote_image(filename, vote):
+def vote_on_image(filename, vote):
     """Vote on an image"""
     if api_key is None:
         print("Provide an API key in the init function")
