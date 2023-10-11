@@ -51,7 +51,7 @@ def is_url(string):
     return bool(re.match(regex_pattern, string))
 
 
-def eval(image, features=[], prompt="No prompt", metadata={}):
+def eval(image, features=["is_deformed"], prompt="No prompt", metadata={}):
     """Evaluate an image and return the response"""
     image_url = None
 

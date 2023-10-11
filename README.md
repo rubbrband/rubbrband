@@ -46,7 +46,7 @@ with open("/path/to/image.png", "rb") as f:
 
 ## Evaluation features
 
-Rubbrband by default returns the `rating` feature, which returns either `normal` or `deformed`.
+Rubbrband client library by default returns the `is_deformed` feature, which returns either `True` or `False`.
 
 Other available features are `["nsfw"]`.
 
@@ -57,5 +57,5 @@ response = rubbrband.eval(
     "features": ["nsfw"]
 )
 
-is_deformed = response["nsfw_detected"]
+nsfw = response["nsfw_detected"]
 ```
