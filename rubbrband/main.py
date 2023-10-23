@@ -109,6 +109,59 @@ def eval(image, features=["is_deformed"], prompt="No prompt", metadata={}):
     return response
 
 
+def create_album(album_name, reference_images=None):
+    b64_references = []
+    reference_image_urls = []
+    is_url_references = False
+
+    for i in range(len(reference_images)):
+        image = reference_images[i]
+        if isinstance(image, str) and is_url(image):
+            if i != 0 and not is_url_references:
+                print("all reference images must be of one type -- urls or files")
+                return False
+            else:
+                is_url_references = True
+            reference_image_urls.append(image)
+        elif isinstance(image, str) and os.path.isfile(image):
+            # If image is a file path, read it
+            with open(image, "rb") as file:
+                image = file.read()
+            base64_image = jpg_byte_array_to_b64(image)
+            b64_references.append(base64_image)
+        elif isinstance(image, (Image.Image, bytes)):
+            base64_image = jpg_byte_array_to_b64(image)
+            b64_references.append(base64_image)
+        else:
+            print("Invalid image type")
+            return False
+    if len(b64_references) != 0:
+        response = requests.post(
+            "https://block.rubbrband.com/create_album",
+            json={
+                "album_name": album_name,
+                "api_key": api_key,
+                "reference_images": b64_references,
+            },
+            headers={
+                "Content-Type": "application/json",
+            },
+            timeout=5,
+        )
+    else:
+        response = requests.post(
+            "https://block.rubbrband.com/create_album",
+            json={"album_name": album_name, "api_key": api_key, "reference_image_urls": reference_image_urls},
+            headers={
+                "Content-Type": "application/json",
+            },
+            timeout=5,
+        )
+    if response is None:
+        return False
+    return response
+
+
 def vote_on_image(filename, vote):
     """Vote on an image"""
     if api_key is None:
