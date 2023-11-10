@@ -50,7 +50,7 @@ def is_url(string):
     return bool(re.match(regex_pattern, string))
 
 
-def eval(image, features=["is_deformed"], prompt="No prompt", metadata={}):
+def eval(image, features=["is_deformed"], prompt="No prompt", album_id=None, image_name=None, metadata={}):
     """Evaluate an image and return the response"""
     image_url = None
 
@@ -69,37 +69,34 @@ def eval(image, features=["is_deformed"], prompt="No prompt", metadata={}):
         return False
 
     if image_url:
-        response = requests.post(
-            "https://api.rubbrband.com/eval",
-            json={
-                "metadata": metadata,
-                "prompt": prompt,
-                "image_url": image_url,
-                "api_key": api_key,
-                "features": features,
-            },
-            headers={
-                "Content-Type": "application/json",
-            },
-            timeout=5,
-        )
+        json = {
+            "metadata": metadata,
+            "prompt": prompt,
+            "image_url": image_url,
+            "api_key": api_key,
+            "features": features,
+        }
     else:
         image = image_to_jpg_byte_array(image)
         base64_image = jpg_byte_array_to_b64(image)
-        response = requests.post(
-            "https://api.rubbrband.com/eval",
-            json={
-                "metadata": metadata,
-                "prompt": prompt,
-                "image": base64_image,
-                "api_key": api_key,
-                "features": features,
-            },
-            headers={
-                "Content-Type": "application/json",
-            },
-            timeout=5,
-        )
+        json = {"metadata": metadata, "prompt": prompt, "image": base64_image, "api_key": api_key, "features": features}
+    if album_id:
+        json["album_id"] = album_id
+    if image_name:
+        json["image_name"] = image_name
+
+    timeout = 5
+    if "is_reference_aligned" in features:
+        timeout = 300
+
+    response = requests.post(
+        "https://api.rubbrband.com/eval",
+        json=json,
+        headers={
+            "Content-Type": "application/json",
+        },
+        timeout=timeout,
+    )
 
     if response is None:
         return False
@@ -126,41 +123,32 @@ def create_album(album_name):
     return response
 
 
-def add_album_reference_image(album_name, reference_image):
+def add_album_reference_image(album_name, reference_image, image_name=None):
+    json = {"album_name": album_name, "api_key": api_key}
+    if image_name:
+        json["image_name"] = image_name
     if isinstance(reference_image, str) and is_url(reference_image):
-        response = requests.post(
-            "https://app.rubbrband.com/upload_reference_image",
-            json={"album_name": album_name, "api_key": api_key, "image_url": reference_image},
-            headers={
-                "Content-Type": "application/json",
-            },
-            timeout=5,
-        )
+        json["image_url"] = reference_image
     elif isinstance(reference_image, str) and os.path.isfile(reference_image):
         with open(reference_image, "rb") as file:
             image = file.read()
         base64_image = jpg_byte_array_to_b64(image)
-        response = requests.post(
-            "https://app.rubbrband.com/upload_reference_image",
-            json={"album_name": album_name, "api_key": api_key, "image": base64_image},
-            headers={
-                "Content-Type": "application/json",
-            },
-            timeout=5,
-        )
-    elif isinstance(image, (Image.Image, bytes)):
-        base64_image = jpg_byte_array_to_b64(image)
-        response = requests.post(
-            "https://app.rubbrband.com/upload_reference_image",
-            json={"album_name": album_name, "api_key": api_key, "image": base64_image},
-            headers={
-                "Content-Type": "application/json",
-            },
-            timeout=5,
-        )
+        json["image"] = base64_image
+    elif isinstance(reference_image, (Image.Image, bytes)):
+        base64_image = jpg_byte_array_to_b64(reference_image)
+        json["image"] = base64_image
     else:
         print("Invalid image type")
         return False
+
+    response = requests.post(
+        "https://block.rubbrband.com/add_album_reference_image",
+        json=json,
+        headers={
+            "Content-Type": "application/json",
+        },
+        timeout=15,
+    )
     if response is None:
         return False
     return response
